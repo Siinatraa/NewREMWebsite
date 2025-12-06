@@ -59,11 +59,10 @@ export function AboutPage() {
           </h2>
           <div className="space-y-4 text-foreground/80 leading-relaxed">
             <p>
-              I am a Cyber D Shred in the Space Force with a Non Cyber Navy background. I transferred from the Navy in 2023 as part of the Inter-Service Transfer program. Ever since joining the Space Force I have gone deep into the Cybersecurity Rabbit Hole exploring everything from Pentesting/Red Teaming to Digital Forensics and now Reverse Engineering Malware (REM).
+              I currently serve as a Cyber D-Shred in the United States Space Force, having transferred from a non-cyber background in the Navy in 2023. Since making the jump I’ve gone down the cybersecurity rabbit hole exploring everything from Pentesting and Red Teaming to Digital Forensics and recently found Reverse Engineering Malware (REM) to be particularly interesting.
             </p>
             <p>
-              I worked my way up from a SOC Analyst to Incident Responder and now a Crew Chief leading my own Crew. At the current time my goal is to pass the GIAC FOR610 GREM Certification. I made this website to document my progress in REM by writing Write-Ups for Hack the Box's Sherlock CTFs. As time goes on and as I get better I plan on actually doing full write ups on legitimate Malware and possibly adding different content as well.
-            </p>
+              I worked my way up from a SOC Analyst to Incident Responder and currently hold the position Crew Chief in leading my own Crew of Cyber Operators. At the current time my goal is to pass the GIAC FOR610 GREM Certification. I made this website to document my progress in REM by posting Write Ups for Hack the Box's Malware Analysis Sherlock CTFs. As time goes on and I improve I plan on doing full write ups on legitimate Malware and possibly adding different content as well.
           </div>
         </div>
 
