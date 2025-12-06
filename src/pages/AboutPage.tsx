@@ -63,6 +63,7 @@ export function AboutPage() {
             </p>
             <p>
               I worked my way up from a SOC Analyst to Incident Responder and currently hold the position Crew Chief in leading my own Crew of Cyber Operators. At the current time my goal is to pass the GIAC FOR610 GREM Certification. I made this website to document my progress in REM by posting Write Ups for Hack the Box's Malware Analysis Sherlock CTFs. As time goes on and I improve I plan on doing full write ups on legitimate Malware and possibly adding different content as well.
+            </p>
           </div>
         </div>
 
