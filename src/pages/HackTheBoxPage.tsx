@@ -360,7 +360,7 @@ export function HackTheBoxPage() {
                         <p className="font-mono text-sm text-primary">F3894AF4F1FFA42B3A379DDDBA384405</p>
                       </div>
                       <p className="text-foreground/70 text-sm">There are multiple ways to grab a hash of a file. I'm running FlareVM so I was able to left click and select MD5 Hash from the provided menu.</p>
-                      <img src="https://cdn-ai.onspace.ai/onspace/files/JfHrPeXWZ8QBeytmgVqXwY/image_(8).png" alt="Applicants DB hash" className="rounded-lg border border-border w-full" />
+                      <img src="https://cdn-ai.onspace.ai/onspace/files/dD6L6EVLD7WMudD9mkYWgL/Applicants_DB_hash.png" alt="Applicants DB hash" className="rounded-lg border border-border w-full" />
                     </div>
 
                     {/* Question 9 */}
@@ -370,7 +370,7 @@ export function HackTheBoxPage() {
                       <div className="bg-muted/50 rounded-lg p-4 border-l-4 border-primary">
                         <p className="font-mono text-sm text-primary">87BAA3A12068C471C3320B7F41235669</p>
                       </div>
-                      <img src="https://cdn-ai.onspace.ai/onspace/files/9T23SAUT6YgDUgGLhkNUNg/image_(9).png" alt="Trading backup hash" className="rounded-lg border border-border w-full" />
+                      <img src="https://cdn-ai.onspace.ai/onspace/files/YZNpDttycfc3JbfXxDYQHT/Trading_Backup_Hash.png" alt="Trading backup hash" className="rounded-lg border border-border w-full" />
                     </div>
 
                     {/* Question 10 */}
@@ -380,7 +380,7 @@ export function HackTheBoxPage() {
                       <div className="bg-muted/50 rounded-lg p-4 border-l-4 border-primary">
                         <p className="font-mono text-sm text-primary">C3F05980D9BD945446F8A21BAFDBF4E7</p>
                       </div>
-                      <img src="https://cdn-ai.onspace.ai/onspace/files/LEhjb6RvTpDLsdcwQsE72j/image_(10).png" alt="Complaints file hash" className="rounded-lg border border-border w-full" />
+                      <img src="https://cdn-ai.onspace.ai/onspace/files/N9Jtpv9ge6WHm4mNVnq7N3/Complaints_File_Hash.png" alt="Complaints file hash" className="rounded-lg border border-border w-full" />
                     </div>
 
                     {/* Review Section */}
