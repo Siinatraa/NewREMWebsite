@@ -52,7 +52,7 @@ export function HackTheBoxPage() {
           {expandedSections.includes('easy') && (
             <div className="px-6 pb-6">
               {/* Training Day Write-up */}
-              <div className="mt-6 border border-border rounded-lg overflow-hidden">
+              <div className="mt-6 border border-border rounded-lg overflow-hidden mb-6">
                 <button
                   onClick={() => toggleWriteup('training-day')}
                   className="w-full flex items-center justify-between text-left p-4 bg-muted/30 hover:bg-muted/50 transition-colors"
@@ -253,6 +253,159 @@ export function HackTheBoxPage() {
                           <p className="font-semibold text-foreground">2. x32 vs x64 Return Values</p>
                           <p className="leading-relaxed">
                             One of the other major things I learned as well is the small but important difference in x64 and x32 executables and how they return values into a function. In x32 the return value of whatever the function is doing is stored into the EAX Register, in x64 bit executable this value is stored in the RAX Register. I didn't know this beforehand and something I will stick in the back of my mind for later.
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Lockpick Write-up */}
+              <div className="mt-6 border border-border rounded-lg overflow-hidden">
+                <button
+                  onClick={() => toggleWriteup('lockpick')}
+                  className="w-full flex items-center justify-between text-left p-4 bg-muted/30 hover:bg-muted/50 transition-colors"
+                >
+                  <h3 className="text-xl font-semibold text-primary">Lockpick</h3>
+                  {expandedWriteups.includes('lockpick') ? <ChevronDown className="w-5 h-5" /> : <ChevronRight className="w-5 h-5" />}
+                </button>
+                
+                {expandedWriteups.includes('lockpick') && (
+                  <div className="p-6 space-y-8 bg-card">
+                    {/* Question 1 */}
+                    <div className="space-y-4">
+                      <h4 className="text-lg font-semibold text-secondary">Question 1</h4>
+                      <p className="text-foreground/80">Please confirm the encryption key string utilised for the encryption of the files provided?</p>
+                      <div className="bg-muted/50 rounded-lg p-4 border-l-4 border-primary">
+                        <p className="font-mono text-sm text-primary">bhUlIshutrea98liOp</p>
+                      </div>
+                      <p className="text-foreground/70 text-sm">First thing I did was open the files I could in the zip to get an idea of what we're dealing with because it came with a lot of files. After getting a basic pre-analysis done I did find any useful strings so I put in Ghidra. How I found the encryption string was I went to the main function and figured it would be around there. Lucky enough they stuck right at the beginning for us to see.</p>
+                      <img src="https://cdn-ai.onspace.ai/onspace/files/LpKwX7Rotsh7cLPdhzQTNj/image.png" alt="Encryption key in Ghidra" className="rounded-lg border border-border w-full" />
+                    </div>
+
+                    {/* Question 2 */}
+                    <div className="space-y-4">
+                      <h4 className="text-lg font-semibold text-secondary">Question 2</h4>
+                      <p className="text-foreground/80">We have recently received an email from wbevansn1@cocolog-nifty.com demanding to know the first and last name we have him registered as. They believe they made a mistake in the application process. Please confirm the first and last name of this applicant.</p>
+                      <div className="bg-muted/50 rounded-lg p-4 border-l-4 border-primary">
+                        <p className="font-mono text-sm text-primary">Walden Bevans</p>
+                      </div>
+                      <p className="text-foreground/70 text-sm">I was very confused as to what this meant but after looking at the encrypted documents provided and the questions I realized I have to figured out how to Decrypt these. Let's go down this rabbit hole.</p>
+                      <p className="text-foreground/70 text-sm">Using the great tools of the modern age I asked AI to create me a BES24 decryption, all you need is the encryption key and it takes care of it all for you. All now search the email provided and we get:</p>
+                      <img src="https://cdn-ai.onspace.ai/onspace/files/MkrwsR2sqKVzV2st6ww2wy/image_(1).png" alt="Decryption script" className="rounded-lg border border-border w-full" />
+                      <img src="https://cdn-ai.onspace.ai/onspace/files/DVdwLqCatkzbCMPu7MFoMq/image_(2).png" alt="Search results" className="rounded-lg border border-border w-full mt-4" />
+                    </div>
+
+                    {/* Question 3 */}
+                    <div className="space-y-4">
+                      <h4 className="text-lg font-semibold text-secondary">Question 3</h4>
+                      <p className="text-foreground/80">What is the email address of the attacker?</p>
+                      <div className="bg-muted/50 rounded-lg p-4 border-l-4 border-primary">
+                        <p className="font-mono text-sm text-primary">bes24@protonmail.com</p>
+                      </div>
+                      <p className="text-foreground/70 text-sm">The email address of the hackers is pretty easy, just open up any of the note.txt files and you'll find it.</p>
+                      <img src="https://cdn-ai.onspace.ai/onspace/files/d2JG3bxfn6pYofgPq3ej2Q/image_(3).png" alt="Attacker email" className="rounded-lg border border-border w-full" />
+                    </div>
+
+                    {/* Question 4 */}
+                    <div className="space-y-4">
+                      <h4 className="text-lg font-semibold text-secondary">Question 4</h4>
+                      <p className="text-foreground/80">City of London Police have suspicions of some insider trading taking part within our trading organisation. Please confirm the email address of the person with the highest profit percentage in a single trade alongside the profit percentage (to 25 decimal places).</p>
+                      <div className="bg-muted/50 rounded-lg p-4 border-l-4 border-primary">
+                        <p className="font-mono text-sm text-primary break-all">fmosedale17a@bizjournals.com, 142303.1996053929628411706675436</p>
+                      </div>
+                      <p className="text-foreground/70 text-sm">Thank goodness for AI as I was not gonna parse the giant JSON file and do mathematical calculations, I had it write a script for me so I could extract the name, email, and their percentage.</p>
+                      <img src="https://cdn-ai.onspace.ai/onspace/files/KcbntbQZntprbKzCNqJA8E/image_(4).png" alt="Highest profit trader" className="rounded-lg border border-border w-full" />
+                    </div>
+
+                    {/* Question 5 */}
+                    <div className="space-y-4">
+                      <h4 className="text-lg font-semibold text-secondary">Question 5</h4>
+                      <p className="text-foreground/80">What is the MAC address and serial number of the laptop assigned to Hart Manifould?</p>
+                      <div className="bg-muted/50 rounded-lg p-4 border-l-4 border-primary">
+                        <p className="font-mono text-sm text-primary">E8-16-DF-E7-52-48, 1316262</p>
+                      </div>
+                      <p className="text-foreground/70 text-sm">With the decrypted files we search for Hart Manifould and find his MAC and Serial Number.</p>
+                      <img src="https://cdn-ai.onspace.ai/onspace/files/PeZKz363X2oCEfLaJaMLgc/image_(5).png" alt="Hart Manifould MAC and Serial" className="rounded-lg border border-border w-full" />
+                    </div>
+
+                    {/* Question 6 */}
+                    <div className="space-y-4">
+                      <h4 className="text-lg font-semibold text-secondary">Question 6</h4>
+                      <p className="text-foreground/80">Our E-Discovery team would like to confirm the IP address detailed in the Sales Forecast log for a user who is suspected of sharing their account with a colleague. Please confirm the IP address for Karylin O'Hederscoll.</p>
+                      <div className="bg-muted/50 rounded-lg p-4 border-l-4 border-primary">
+                        <p className="font-mono text-sm text-primary">8.254.104.208</p>
+                      </div>
+                      <p className="text-foreground/70 text-sm">Search Hederscoll in the Sales Forecast and we find our answer.</p>
+                      <img src="https://cdn-ai.onspace.ai/onspace/files/isDrQ4YiGTomx6V7xi3gUf/image_(6).png" alt="IP address search" className="rounded-lg border border-border w-full" />
+                    </div>
+
+                    {/* Question 7 */}
+                    <div className="space-y-4">
+                      <h4 className="text-lg font-semibold text-secondary">Question 7</h4>
+                      <p className="text-foreground/80">Which of the following file extensions is not targeted by the malware? .txt, .sql, .ppt, .pdf, .docx, .xlsx, .csv, .json, .xml</p>
+                      <div className="bg-muted/50 rounded-lg p-4 border-l-4 border-primary">
+                        <p className="font-mono text-sm text-primary">.ppt</p>
+                      </div>
+                      <p className="text-foreground/70 text-sm">Looking at the code in Ghidra we can see what file types are targeted and it's pretty easy to see that .ppt was not harvested.</p>
+                      <img src="https://cdn-ai.onspace.ai/onspace/files/FLrKEsjJnmtjHuGATX2giW/image_(7).png" alt="File extensions in code" className="rounded-lg border border-border w-full" />
+                    </div>
+
+                    {/* Question 8 */}
+                    <div className="space-y-4">
+                      <h4 className="text-lg font-semibold text-secondary">Question 8</h4>
+                      <p className="text-foreground/80">We need to confirm the integrity of the files once decrypted. Please confirm the MD5 hash of the applicants DB.</p>
+                      <div className="bg-muted/50 rounded-lg p-4 border-l-4 border-primary">
+                        <p className="font-mono text-sm text-primary">F3894AF4F1FFA42B3A379DDDBA384405</p>
+                      </div>
+                      <p className="text-foreground/70 text-sm">There are multiple ways to grab a hash of a file. I'm running FlareVM so I was able to left click and select MD5 Hash from the provided menu.</p>
+                      <img src="https://cdn-ai.onspace.ai/onspace/files/JfHrPeXWZ8QBeytmgVqXwY/image_(8).png" alt="Applicants DB hash" className="rounded-lg border border-border w-full" />
+                    </div>
+
+                    {/* Question 9 */}
+                    <div className="space-y-4">
+                      <h4 className="text-lg font-semibold text-secondary">Question 9</h4>
+                      <p className="text-foreground/80">We need to confirm the integrity of the files once decrypted. Please confirm the MD5 hash of the trading backup.</p>
+                      <div className="bg-muted/50 rounded-lg p-4 border-l-4 border-primary">
+                        <p className="font-mono text-sm text-primary">87BAA3A12068C471C3320B7F41235669</p>
+                      </div>
+                      <img src="https://cdn-ai.onspace.ai/onspace/files/9T23SAUT6YgDUgGLhkNUNg/image_(9).png" alt="Trading backup hash" className="rounded-lg border border-border w-full" />
+                    </div>
+
+                    {/* Question 10 */}
+                    <div className="space-y-4">
+                      <h4 className="text-lg font-semibold text-secondary">Question 10</h4>
+                      <p className="text-foreground/80">We need to confirm the integrity of the files once decrypted. Please confirm the MD5 hash of the complaints file.</p>
+                      <div className="bg-muted/50 rounded-lg p-4 border-l-4 border-primary">
+                        <p className="font-mono text-sm text-primary">C3F05980D9BD945446F8A21BAFDBF4E7</p>
+                      </div>
+                      <img src="https://cdn-ai.onspace.ai/onspace/files/LEhjb6RvTpDLsdcwQsE72j/image_(10).png" alt="Complaints file hash" className="rounded-lg border border-border w-full" />
+                    </div>
+
+                    {/* Review Section */}
+                    <div className="mt-8 p-6 bg-primary/10 border border-primary/30 rounded-lg">
+                      <h4 className="text-xl font-bold text-primary mb-4">Review</h4>
+                      <p className="text-foreground/80 leading-relaxed">
+                        I would honestly say this was pretty easy, the first question I was worried it was gonna be a "mislabeled room" (What I call a room that doesn't match its difficulty) but it turned out okay. I've been working a lot with Ghidra and I'm glad I was able to lock onto the first answer pretty quickly.
+                      </p>
+                    </div>
+
+                    {/* What I Learned Section */}
+                    <div className="mt-6 p-6 bg-secondary/10 border border-secondary/30 rounded-lg">
+                      <h4 className="text-xl font-bold text-secondary mb-4">What I Learned</h4>
+                      <div className="space-y-4 text-foreground/80">
+                        <div className="space-y-3">
+                          <p className="font-semibold text-foreground">1. Decrypting Basic Ransomware</p>
+                          <p className="leading-relaxed">
+                            One thing I can take away from this is now I know how to decrypt *very basic* ransomware with Python which is pretty cool even though AI carried me through the scripting part. At first I wasn't sure this was gonna be the right way to go about the Q&A as I thought this was more of an advanced technique but it was just at the right level to figure everything else.
+                          </p>
+                        </div>
+
+                        <div className="space-y-3">
+                          <p className="font-semibold text-foreground">2. ELF File Structure</p>
+                          <p className="leading-relaxed">
+                            Another thing I learned is how .elf looks/structure in Ghidra and what makes them up in Disassembly as up until this point I've only messed with Windows Executables. Made a good practice and skill sharpening exercise!
                           </p>
                         </div>
                       </div>
