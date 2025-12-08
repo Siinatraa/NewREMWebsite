@@ -74,6 +74,31 @@ export function OtherPage() {
                   <ExternalLink className="w-5 h-5 text-muted-foreground group-hover:text-primary transition-colors flex-shrink-0" />
                 </div>
               </a>
+
+              {/* John Hammond */}
+              <a
+                href="https://www.youtube.com/@_JohnHammond"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block bg-muted/30 rounded-lg p-6 border border-border hover:border-primary/50 transition-all hover:bg-muted/50 group"
+              >
+                <div className="flex items-start justify-between gap-4">
+                  <div className="flex items-start gap-4 flex-1">
+                    <div className="w-12 h-12 rounded-lg bg-red-500/20 flex items-center justify-center flex-shrink-0">
+                      <Youtube className="w-6 h-6 text-red-500" />
+                    </div>
+                    <div className="flex-1">
+                      <h3 className="text-lg font-semibold text-primary mb-2 group-hover:text-primary/80 transition-colors">
+                        John Hammond
+                      </h3>
+                      <p className="text-sm text-muted-foreground">
+                        Cybersecurity researcher and educator covering CTF challenges, malware analysis, and security tools.
+                      </p>
+                    </div>
+                  </div>
+                  <ExternalLink className="w-5 h-5 text-muted-foreground group-hover:text-primary transition-colors flex-shrink-0" />
+                </div>
+              </a>
             </div>
           )}
         </div>
