@@ -2,6 +2,8 @@
 import { Bug, ChevronDown, ChevronRight } from 'lucide-react';
 import { useState } from 'react';
 
+// Hack the Box write-ups page
+
 export function HackTheBoxPage() {
   const [expandedSections, setExpandedSections] = useState<string[]>(['easy']);
   const [expandedWriteups, setExpandedWriteups] = useState<string[]>([]);
