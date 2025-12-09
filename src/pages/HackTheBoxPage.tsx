@@ -413,11 +413,331 @@ export function HackTheBoxPage() {
                   </div>
                 )}
               </div>
+
+              {/* Heartbreaker Continuum Write-up */}
+              <div className="mt-6 border border-border rounded-lg overflow-hidden">
+                <button
+                  onClick={() => toggleWriteup('heartbreaker-continuum')}
+                  className="w-full flex items-center justify-between text-left p-4 bg-muted/30 hover:bg-muted/50 transition-colors"
+                >
+                  <h3 className="text-xl font-semibold text-primary">Heartbreaker Continuum</h3>
+                  {expandedWriteups.includes('heartbreaker-continuum') ? <ChevronDown className="w-5 h-5" /> : <ChevronRight className="w-5 h-5" />}
+                </button>
+                
+                {expandedWriteups.includes('heartbreaker-continuum') && (
+                  <div className="p-6 space-y-8 bg-card">
+                    {/* Question 1 */}
+                    <div className="space-y-4">
+                      <h4 className="text-lg font-semibold text-secondary">Question 1</h4>
+                      <p className="text-foreground/80">To accurately reference and identify the suspicious binary, please provide its SHA256 hash.</p>
+                      <div className="bg-muted/50 rounded-lg p-4 border-l-4 border-primary">
+                        <p className="font-mono text-sm text-primary break-all">12DAA34111BB54B3DCBAD42305663E44E7E6C3842F015CCCBBE6564D9DFD3EA3</p>
+                      </div>
+                      <p className="text-foreground/70 text-sm">There are multiple ways to get hashes for files, but the option I took was putting the executable in PeStudio. This gives us more than just the hash to look at.</p>
+                      <img src="https://cdn-ai.onspace.ai/onspace/files/gS5KfmiEPVpELGPWQ2Hf4f/image.png" alt="SHA256 hash in PeStudio" className="rounded-lg border border-border w-full" />
+                    </div>
+
+                    {/* Question 2 */}
+                    <div className="space-y-4">
+                      <h4 className="text-lg font-semibold text-secondary">Question 2</h4>
+                      <p className="text-foreground/80">When was the binary file originally created, according to its metadata (UTC)?</p>
+                      <div className="bg-muted/50 rounded-lg p-4 border-l-4 border-primary">
+                        <p className="font-mono text-sm text-primary">2024-03-13 10:38:06</p>
+                      </div>
+                      <p className="text-foreground/70 text-sm">Again, while still in PeStudio, if we look right under where we found the hash, we find the creation time in UTC.</p>
+                      <img src="https://cdn-ai.onspace.ai/onspace/files/gwLDPAFs8m4iEi3aNqf6sy/image_(1).png" alt="Binary creation time" className="rounded-lg border border-border w-full" />
+                    </div>
+
+                    {/* Question 3 */}
+                    <div className="space-y-4">
+                      <h4 className="text-lg font-semibold text-secondary">Question 3</h4>
+                      <p className="text-foreground/80">Examining the code size in a binary file can give indications about its functionality. Could you specify the byte size of the code in this binary?</p>
+                      <div className="bg-muted/50 rounded-lg p-4 border-l-4 border-primary">
+                        <p className="font-mono text-sm text-primary">38400</p>
+                      </div>
+                      <p className="text-foreground/70 text-sm">If we go to Sections in PeStudio we see 3 different sections: .text, .rsrc, and .reloc. The first one is the only section that holds the code, and in this view, we can see the size in bytes.</p>
+                      <img src="https://cdn-ai.onspace.ai/onspace/files/cEz2cLH5DGTBoS7qafLcoM/image_(2).png" alt="Code section size" className="rounded-lg border border-border w-full" />
+                    </div>
+
+                    {/* Question 4 */}
+                    <div className="space-y-4">
+                      <h4 className="text-lg font-semibold text-secondary">Question 4</h4>
+                      <p className="text-foreground/80">It appears that the binary may have undergone a file conversion process. Could you determine its original filename?</p>
+                      <div className="bg-muted/50 rounded-lg p-4 border-l-4 border-primary">
+                        <p className="font-mono text-sm text-primary">newILY.ps1</p>
+                      </div>
+                      <p className="text-foreground/70 text-sm">We can see the original name by clicking on the root of the tree and seeing a section called "Original-File-Name," but unfortunately this is wrong. It honestly was confusing me at first, but I realized they're still talking about the .text section from the last question that holds the executable code. Since it was converted, we don't see the true original name there. To find that, we can go to "Resources," and at the top, we see the name with the .text.</p>
+                      <img src="https://cdn-ai.onspace.ai/onspace/files/63pCum2bHDAcrbxAEps8Nw/image_(3).png" alt="Original filename in resources" className="rounded-lg border border-border w-full" />
+                    </div>
+
+                    {/* Question 5 */}
+                    <div className="space-y-4">
+                      <h4 className="text-lg font-semibold text-secondary">Question 5</h4>
+                      <p className="text-foreground/80">Specify the hexadecimal offset where the obfuscated code of the identified original file begins in the binary.</p>
+                      <div className="bg-muted/50 rounded-lg p-4 border-l-4 border-primary">
+                        <p className="font-mono text-sm text-primary">2C74</p>
+                      </div>
+                      <p className="text-foreground/70 text-sm">The first thought was to check the strings, and PeStudio conveniently has a section for this so we don't have to run strings via the terminal. Scrolling down I noticed something that looked like obfuscated code similar to Base64. When I saw the byte size I was confident this was the answer; right next to the byte size it shows the offset.</p>
+                      <img src="https://cdn-ai.onspace.ai/onspace/files/ZXRY8rCyCm7srEH3xy9BjH/image_(4).png" alt="Obfuscated code offset" className="rounded-lg border border-border w-full" />
+                    </div>
+
+                    {/* Question 6 */}
+                    <div className="space-y-4">
+                      <h4 className="text-lg font-semibold text-secondary">Question 6</h4>
+                      <p className="text-foreground/80">The threat actor concealed the plaintext script within the binary. Can you provide the encoding method used for this obfuscation?</p>
+                      <div className="bg-muted/50 rounded-lg p-4 border-l-4 border-primary">
+                        <p className="font-mono text-sm text-primary">Base64</p>
+                      </div>
+                      <p className="text-foreground/70 text-sm">Going off of the above, I copied the entire value of it and pasted it into Notepad just to view everything. As I suspected from the last question it seems to be Base64; a giveaway is the "==" in the string, which is used as padding. Note: Something of interest is that this string is backwards. I noticed it earlier when I first saw it. When I pasted it into Notepad it confirmed my suspicion; I highlighted the reversing as well as the answer in the picture.</p>
+                      <img src="https://cdn-ai.onspace.ai/onspace/files/hdELLNYH5YyZJJjYbL2HR3/image_(5).png" alt="Base64 encoding" className="rounded-lg border border-border w-full" />
+                    </div>
+
+                    {/* Question 7 */}
+                    <div className="space-y-4">
+                      <h4 className="text-lg font-semibold text-secondary">Question 7</h4>
+                      <p className="text-foreground/80">What is the specific cmdlet utilized that was used to initiate file downloads?</p>
+                      <div className="bg-muted/50 rounded-lg p-4 border-l-4 border-primary">
+                        <p className="font-mono text-sm text-primary">Invoke-WebRequest</p>
+                      </div>
+                      <p className="text-foreground/70 text-sm">So I figured I would decode this using CyberChef. The recipe used was Reverse (to reverse the string) and From Base64 (to decode it). We get a pretty nasty PowerShell script with multiple IOCs and the cmdlet used to download.</p>
+                      <img src="https://cdn-ai.onspace.ai/onspace/files/eYr6MTX4yiE8NyajRV2gKQ/image_(6).png" alt="CyberChef decoding" className="rounded-lg border border-border w-full" />
+                    </div>
+
+                    {/* Question 8 */}
+                    <div className="space-y-4">
+                      <h4 className="text-lg font-semibold text-secondary">Question 8</h4>
+                      <p className="text-foreground/80">Could you identify any possible network-related Indicators of Compromise (IoCs) after examining the code? Separate IPs by comma and in ascending order.</p>
+                      <div className="bg-muted/50 rounded-lg p-4 border-l-4 border-primary">
+                        <p className="font-mono text-sm text-primary">35.169.66.138</p>
+                      </div>
+                      <p className="text-foreground/70 text-sm">So we see the first IP IOC in the screenshot above, but there are two! Scrolling down we find another IP that connects the malware to an SFTP server.</p>
+                      <img src="https://cdn-ai.onspace.ai/onspace/files/grWCdqFHNTfRrFs6QxaUyv/image_(7).png" alt="IP IOC in script" className="rounded-lg border border-border w-full" />
+                    </div>
+
+                    {/* Question 9 */}
+                    <div className="space-y-4">
+                      <h4 className="text-lg font-semibold text-secondary">Question 9</h4>
+                      <p className="text-foreground/80">The binary created a staging directory. Can you specify the location of this directory where the harvested files are stored?</p>
+                      <div className="bg-muted/50 rounded-lg p-4 border-l-4 border-primary">
+                        <p className="font-mono text-sm text-primary">C:\Users\Public\Public Files</p>
+                      </div>
+                      <p className="text-foreground/70 text-sm">I wouldn't say it's immediately evident where the output goes, but the $targetDir variable caught my eye. I followed the script and determined this was the output location for all the enumeration it is doing.</p>
+                      <img src="https://cdn-ai.onspace.ai/onspace/files/Qz3pz5qi9qqPk4cNVmDGcy/image_(8).png" alt="Target directory" className="rounded-lg border border-border w-full" />
+                    </div>
+
+                    {/* Question 10 */}
+                    <div className="space-y-4">
+                      <h4 className="text-lg font-semibold text-secondary">Question 10</h4>
+                      <p className="text-foreground/80">What MITRE ID corresponds to the technique used by the malicious binary to autonomously gather data?</p>
+                      <div className="bg-muted/50 rounded-lg p-4 border-l-4 border-primary">
+                        <p className="font-mono text-sm text-primary">T1119</p>
+                      </div>
+                      <p className="text-foreground/70 text-sm">A simple Google search for "MITRE Automated Collection" and we came back with the technique ID.</p>
+                      <img src="https://cdn-ai.onspace.ai/onspace/files/QWSknJVSZnycSKCKZNKykB/image_(9).png" alt="MITRE technique" className="rounded-lg border border-border w-full" />
+                    </div>
+
+                    {/* Question 11 */}
+                    <div className="space-y-4">
+                      <h4 className="text-lg font-semibold text-secondary">Question 11</h4>
+                      <p className="text-foreground/80">What is the password utilized to exfiltrate the collected files through the file transfer program within the binary?</p>
+                      <div className="bg-muted/50 rounded-lg p-4 border-l-4 border-primary">
+                        <p className="font-mono text-sm text-primary">M8&C!i6KkmGL1-#</p>
+                      </div>
+                      <p className="text-foreground/70 text-sm">Going through the script we see credentials to the SFTP server in the format of Username:Password@SFTP_IP.</p>
+                      <img src="https://cdn-ai.onspace.ai/onspace/files/S6Ps2WELxM7vEXUFQHaQrr/image_(10).png" alt="SFTP credentials" className="rounded-lg border border-border w-full" />
+                    </div>
+
+                    {/* Bonus Section */}
+                    <div className="mt-8 p-6 bg-accent/10 border border-accent/30 rounded-lg">
+                      <h4 className="text-xl font-bold text-accent mb-4">Bonus</h4>
+                      <p className="text-foreground/80 leading-relaxed">
+                        After finishing it I went back and wanted to figure out exactly what this script did. Rereading it slowly it seems to be a basic info stealer worm that uses phishing emails via Outlook to propagate. The email sent seems to be a "Love Confession" and obfuscates the executable directly in the email by hyperlinking.
+                      </p>
+                    </div>
+
+                    {/* Review Section */}
+                    <div className="mt-8 p-6 bg-primary/10 border border-primary/30 rounded-lg">
+                      <h4 className="text-xl font-bold text-primary mb-4">Review</h4>
+                      <p className="text-foreground/80 leading-relaxed">
+                        I think this one was pretty easy; it was not difficult at all. Everything seemed pretty straightforward, but the only hiccup I had was finding the original name. That needed a little thinking to figure out what it meant because I originally thought the file name, not the PowerShell script embedded in .text name.
+                      </p>
+                    </div>
+
+                    {/* What I Learned Section */}
+                    <div className="mt-6 p-6 bg-secondary/10 border border-secondary/30 rounded-lg">
+                      <h4 className="text-xl font-bold text-secondary mb-4">What I Learned</h4>
+                      <div className="space-y-4 text-foreground/80">
+                        <p className="leading-relaxed">
+                          Although I was able to go through it pretty smoothly, the original name stumped me for a little bit. I didn't know I could see the name of embedded executables in the different sections of the file by going to the Resource Tab.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* OpSalwarKameez24-1: Super Start Write-up */}
+              <div className="mt-6 border border-border rounded-lg overflow-hidden">
+                <button
+                  onClick={() => toggleWriteup('opsalwarkameez')}
+                  className="w-full flex items-center justify-between text-left p-4 bg-muted/30 hover:bg-muted/50 transition-colors"
+                >
+                  <h3 className="text-xl font-semibold text-primary">OpSalwarKameez24-1: Super Start</h3>
+                  {expandedWriteups.includes('opsalwarkameez') ? <ChevronDown className="w-5 h-5" /> : <ChevronRight className="w-5 h-5" />}
+                </button>
+                
+                {expandedWriteups.includes('opsalwarkameez') && (
+                  <div className="p-6 space-y-8 bg-card">
+                    {/* Question 1 */}
+                    <div className="space-y-4">
+                      <h4 className="text-lg font-semibold text-secondary">Question 1</h4>
+                      <p className="text-foreground/80">What is the process name of malicious NodeJS application?</p>
+                      <div className="bg-muted/50 rounded-lg p-4 border-l-4 border-primary">
+                        <p className="font-mono text-sm text-primary">Coupon.exe</p>
+                      </div>
+                      <p className="text-foreground/70 text-sm">So my first thought with the question is to actually detonate the malware. I will set up several way to monitor what is going on in the background. I have my Workstation connected to my REMux machine with Inetsim, FakeDNS, and Wireshark. On my Workstation I will use Regshot, Process Hacker, Process Monitor, and ProcDOT.</p>
+                      <p className="text-foreground/70 text-sm">I could have just did Process Monitor but I wanted to get more information as I feel like it would be useful later on in Sherlock. Viewing Process Monitor after executing Electron-Coupons.exe we see it make a child process, this is our answer.</p>
+                      <img src="https://cdn-ai.onspace.ai/onspace/files/YeRKeEVtSzacYL5dzxzARo/image_(11).png" alt="Process Monitor showing Coupon.exe" className="rounded-lg border border-border w-full" />
+                    </div>
+
+                    {/* Question 2 */}
+                    <div className="space-y-4">
+                      <h4 className="text-lg font-semibold text-secondary">Question 2</h4>
+                      <p className="text-foreground/80">Which option has the attacker enabled in the script to run the malicious Node.js application?</p>
+                      <div className="bg-muted/50 rounded-lg p-4 border-l-4 border-primary">
+                        <p className="font-mono text-sm text-primary">nodeIntegration</p>
+                      </div>
+                      <p className="text-foreground/70 text-sm">This was one of the last question I answered because I wasn't too sure what this meant. After googling for a bit I found something called NodeIntegration. This is apart of the Electron Application that allows you to create a process and run the executable, in our case its Coupon.exe, which after further analysis seems to be malicious. Going back to our string output from app.asar I did ctrl + F and was able to confirm nodeIntegration was enabled.</p>
+                      <img src="https://cdn-ai.onspace.ai/onspace/files/SDAZkGJdceL7XFygCDVeTQ/image_(12).png" alt="NodeIntegration enabled" className="rounded-lg border border-border w-full" />
+                    </div>
+
+                    {/* Question 3 */}
+                    <div className="space-y-4">
+                      <h4 className="text-lg font-semibold text-secondary">Question 3</h4>
+                      <p className="text-foreground/80">What protocol and port number is the attacker using to transmit the victim's keystrokes?</p>
+                      <div className="bg-muted/50 rounded-lg p-4 border-l-4 border-primary">
+                        <p className="font-mono text-sm text-primary">WebSocket, 44500</p>
+                      </div>
+                      <p className="text-foreground/70 text-sm">So when we unzipped the file it came with a pcap, I figured the answer would be here. Initially scrolling through the pcap there's a lot of noise going on with a bunch of different protocols going on. To filter out some of this I went to Statistics→Protocol Hierarchy to get a overview of the different protocols used. WebSocket caught my eye as unusual and decided to start there and filtered for it. This was our answer! Looking at in the bottom plane we see the strokes recorded.</p>
+                      <img src="https://cdn-ai.onspace.ai/onspace/files/3vWHLzfAvu6cW2TH6xuHf6/image_(13).png" alt="WebSocket keystrokes" className="rounded-lg border border-border w-full" />
+                    </div>
+
+                    {/* Question 4 */}
+                    <div className="space-y-4">
+                      <h4 className="text-lg font-semibold text-secondary">Question 4</h4>
+                      <p className="text-foreground/80">What XOR key is the attacker using to decode the encoded shellcode?</p>
+                      <div className="bg-muted/50 rounded-lg p-4 border-l-4 border-primary">
+                        <p className="font-mono text-sm text-primary">ec1ee034ec1ee034</p>
+                      </div>
+                      <p className="text-foreground/70 text-sm">Since we locked onto the malicious IP in the last question, 15.206.13.31, I filtered for this in the pcap using the query "ip.addr == 15.206.13.31". I scrolled to the top to see the first interactions with the Malicious IP and noticed a GET Request so I decided to follow the stream. In the stream we find a string that looks oddly similar to a key.</p>
+                      <img src="https://cdn-ai.onspace.ai/onspace/files/XL6Voihu2iMYpMBzq5Co7T/image_(14).png" alt="XOR key" className="rounded-lg border border-border w-full" />
+                    </div>
+
+                    {/* Question 5 */}
+                    <div className="space-y-4">
+                      <h4 className="text-lg font-semibold text-secondary">Question 5</h4>
+                      <p className="text-foreground/80">What is the IP address, port number and process name encoded in the attacker payload?</p>
+                      <div className="bg-muted/50 rounded-lg p-4 border-l-4 border-primary">
+                        <p className="font-mono text-sm text-primary">15.206.13.31, 4444, cmd.exe</p>
+                      </div>
+                      <p className="text-foreground/70 text-sm">This took me a while to find as I am very unfamiliar with JavaScript Malware and REM in general but I was able to get it. Doing some research I found that this executable is NSIS Installer, apparently these can be treated as archives. Using the 7zip utility I was able to open the archive. Now with these the main file you are after is the "app.asar" file. This will give you the source code of the executable. Using 7zip I was able to navigate to the correct location and extract all the content from the file with the strings command, this gave me to source code to Coupon.exe! Now this next part took me a little bit to figure out as I found several IP's (this was the local machines IP and 0.0.0.0) with ports and processes near them. I thought these were the answer as I thought it was the payload but no. After scrolling A LOT as this file was massive I found a hex encoded string and a base64 encoded string. I decided on the base64 first and put it in cyber chef but it was just garble. Then I remembered we had the XOR Key from the last question. I added the XOR to the cyberchef recipe and was able to decoded the string and found the answer!</p>
+                      <img src="https://cdn-ai.onspace.ai/onspace/files/LZiKgo9yNFcNdLMNCYXCjg/image_(15).png" alt="Payload decoding" className="rounded-lg border border-border w-full" />
+                    </div>
+
+                    {/* Question 6 */}
+                    <div className="space-y-4">
+                      <h4 className="text-lg font-semibold text-secondary">Question 6</h4>
+                      <p className="text-foreground/80">What are the two commands the attacker executed after gaining the reverse shell?</p>
+                      <div className="bg-muted/50 rounded-lg p-4 border-l-4 border-primary space-y-1">
+                        <p className="font-mono text-sm text-primary">whoami</p>
+                        <p className="font-mono text-sm text-primary">ipconfig</p>
+                      </div>
+                      <p className="text-foreground/70 text-sm">Since this is a reverse shell but no commands were hard coded to execute after it connects I was curious if we could see them in the pcap from earlier since we know the local machine made a connection to the malicious IP. Going into wireshark and search for port 4444, "tcp.port == 4444", we can see the commands ran by analyzing the TCP Stream.</p>
+                      <img src="https://cdn-ai.onspace.ai/onspace/files/hX2BM88VrVgSdKcoA7UiW2/image_(16).png" alt="Reverse shell commands" className="rounded-lg border border-border w-full" />
+                    </div>
+
+                    {/* Question 7 */}
+                    <div className="space-y-4">
+                      <h4 className="text-lg font-semibold text-secondary">Question 7</h4>
+                      <p className="text-foreground/80">Which Node.js module and its associated function is the attacker using to execute the shellcode within V8 Virtual Machine contexts?</p>
+                      <div className="bg-muted/50 rounded-lg p-4 border-l-4 border-primary">
+                        <p className="font-mono text-sm text-primary">vm, runInNewContext</p>
+                      </div>
+                      <p className="text-foreground/70 text-sm">Again being unfamiliar with Javascript Malware I did a simple google search for Node.js modules used for VM's and looked through some of the documentation. This is where I found the first part of this answer. To find the second part of the question I searched through the string output file for what I found in the documentation.</p>
+                      <img src="https://cdn-ai.onspace.ai/onspace/files/oSMXociMrfV88nULmHSsvu/image_(17).png" alt="VM documentation" className="rounded-lg border border-border w-full" />
+                      <p className="text-foreground/70 text-sm">Above we see several strings I can search but more specifically the "script.runInNewContext", this allows you to run code in the new VM instance. Searching this in the Output we see right under our Base64 encoded Reverse Shell!</p>
+                      <img src="https://cdn-ai.onspace.ai/onspace/files/AHYicSdcVLT23o9SvoCSzK/image_(18).png" alt="runInNewContext in code" className="rounded-lg border border-border w-full" />
+                    </div>
+
+                    {/* Question 8 */}
+                    <div className="space-y-4">
+                      <h4 className="text-lg font-semibold text-secondary">Question 8</h4>
+                      <p className="text-foreground/80">Decompile the bytecode file included in the package and identify the Win32 API used to execute the shellcode.</p>
+                      <div className="bg-muted/50 rounded-lg p-4 border-l-4 border-primary">
+                        <p className="font-mono text-sm text-primary">CreateThread</p>
+                      </div>
+                      <p className="text-foreground/70 text-sm">Again had to do a little research into this. So in Node.js there is a file with a ".jsc" extension, this is our Bytecode or what Node.js calls ByteNode file.</p>
+                      <p className="text-foreground/70 text-sm">Sidenote: We cannot find this via our Strings output so I had to install "npm install -g @electron/asar" which allows us to actually extract all the files in the NSIS file.</p>
+                      <p className="text-foreground/70 text-sm">Okay so now that we installed the above tool and can actually parse the archive, going through this we found our .jsc file which is called "script.jsc". I opened it up in the HxD to get an overview of it but nothing too much. Since it's asking for the specific Win32 API used to execute shellcode I ran Floss (or you can do strings, either or) and came back with strings found in the file. There were very few APIs so it was pretty easy to choose the right answer. The CreateThread API creates a separate thread for execution within the virtual address space allocated to it. Since it allows execution we can safely assume this the API that executed the shellcode.</p>
+                      <img src="https://cdn-ai.onspace.ai/onspace/files/NT6aDsYkkmAKXqiv6N3EWF/image_(19).png" alt="CreateThread API" className="rounded-lg border border-border w-full" />
+                    </div>
+
+                    {/* Question 9 */}
+                    <div className="space-y-4">
+                      <h4 className="text-lg font-semibold text-secondary">Question 9</h4>
+                      <p className="text-foreground/80">Submit the fake discount coupon that the attacker intended to present to the victim.</p>
+                      <div className="bg-muted/50 rounded-lg p-4 border-l-4 border-primary">
+                        <p className="font-mono text-sm text-primary">Coupon1337</p>
+                      </div>
+                      <p className="text-foreground/70 text-sm">This was a little tricky to find and ended up looking up a walkthrough after several hours of attempting to find this. We need to use a specific decompiler for JSC files called View8, what this tool does is attempts to reconstruct the logic of the jsc file allowing us to pier more into the decompiled text. Looking through you'll find a large section containing a bunch of text in decimal format. Taking this and converting it via Cyberchef you find the answer.</p>
+                    </div>
+
+                    {/* Review Section */}
+                    <div className="mt-8 p-6 bg-primary/10 border border-primary/30 rounded-lg">
+                      <h4 className="text-xl font-bold text-primary mb-4">Review</h4>
+                      <p className="text-foreground/80 leading-relaxed">
+                        This was something I really enjoyed doing and learned several new things about NSIS Files and Node.js in general. Going through it I had to use some of my critical thinking skills and pull on my own knowledge and experience but for the vast part of this I had to do a lot of research into this. I didn't feel like this was too exceptionally hard or too easy either and was a great middle ground to test my knowledge and thinking skills.
+                      </p>
+                    </div>
+
+                    {/* What I Learned Section */}
+                    <div className="mt-6 p-6 bg-secondary/10 border border-secondary/30 rounded-lg">
+                      <h4 className="text-xl font-bold text-secondary mb-4">What I Learned</h4>
+                      <div className="space-y-4 text-foreground/80">
+                        <p className="leading-relaxed">
+                          This was a great learning experience in learning Node.js, NSIS File format, and some new Tools to add.
+                        </p>
+                        
+                        <div className="space-y-3">
+                          <p className="font-semibold text-foreground">1. Node.js Understanding</p>
+                          <p className="leading-relaxed">
+                            For Node.js it was a good exercise to learn parts of node.js and how it works, doing a lot of researching and parsing documentation really helped solidify some of that information in my brain. Also notably what is and how to check for "nodeIntegration" which seems pretty important when examining malware like this. For later on down the line if I need to know certain things when examining malware similar to this I can refer back to this or to the documentation I've linked throughout this write up.
+                          </p>
+                        </div>
+
+                        <div className="space-y-3">
+                          <p className="font-semibold text-foreground">2. NSIS File Format</p>
+                          <p className="leading-relaxed">
+                            With the NSIS file format this was really interesting to me as the main executable acts like a zip file but isn't one at the same time. I now know I can access the archive via 7zip and can pull the app.asar which seems to be the most important part of this as it gives incredibly useful information.
+                          </p>
+                        </div>
+
+                        <div className="space-y-3">
+                          <p className="font-semibold text-foreground">3. New Tools</p>
+                          <p className="leading-relaxed">
+                            I tried to keep it simple with the tools I already knew but it wasn't enough for this, I played around with some other utilities and tools inside FlareVM but also View8 to decompile the JSC file. Really cool new tool to add to my workbench.
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
           )}
         </div>
 
-        {/* Medium Difficulty Section */}
+        {/* Medium Difficulty Section */
         <div className="tech-card mb-6 animate-fade-in" style={{ animationDelay: '200ms' }}>
           <button
             onClick={() => toggleSection('medium')}
