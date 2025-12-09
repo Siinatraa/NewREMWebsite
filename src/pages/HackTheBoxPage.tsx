@@ -264,7 +264,7 @@ export function HackTheBoxPage() {
               </div>
 
               {/* Lockpick Write-up */}
-              <div className="mt-6 border border-border rounded-lg overflow-hidden">
+              <div className="mt-6 border border-border rounded-lg overflow-hidden mb-6">
                 <button
                   onClick={() => toggleWriteup('lockpick')}
                   className="w-full flex items-center justify-between text-left p-4 bg-muted/30 hover:bg-muted/50 transition-colors"
@@ -417,7 +417,7 @@ export function HackTheBoxPage() {
               </div>
 
               {/* Heartbreaker Continuum Write-up */}
-              <div className="mt-6 border border-border rounded-lg overflow-hidden">
+              <div className="mt-6 border border-border rounded-lg overflow-hidden mb-6">
                 <button
                   onClick={() => toggleWriteup('heartbreaker-continuum')}
                   className="w-full flex items-center justify-between text-left p-4 bg-muted/30 hover:bg-muted/50 transition-colors"
@@ -579,7 +579,7 @@ export function HackTheBoxPage() {
               </div>
 
               {/* OpSalwarKameez24-1: Super Start Write-up */}
-              <div className="mt-6 border border-border rounded-lg overflow-hidden">
+              <div className="mt-6 border border-border rounded-lg overflow-hidden mb-6">
                 <button
                   onClick={() => toggleWriteup('opsalwarkameez')}
                   className="w-full flex items-center justify-between text-left p-4 bg-muted/30 hover:bg-muted/50 transition-colors"
@@ -739,7 +739,7 @@ export function HackTheBoxPage() {
           )}
         </div>
 
-        {/* Medium Difficulty Section */
+        {/* Medium Difficulty Section */}
         <div className="tech-card mb-6 animate-fade-in" style={{ animationDelay: '200ms' }}>
           <button
             onClick={() => toggleSection('medium')}
