@@ -34,12 +34,12 @@ export function HackTheBoxPage() {
           </div>
           <h1 className="glow-text mb-4">Hack the Box</h1>
           <p className="text-muted-foreground max-w-2xl mx-auto">
-            Sherlock CTF write-ups and analysis documenting my journey through malware analysis challenges
+            Sherlock CTF write-ups and analysis documenting my progress through malware analysis challenges
           </p>
         </div>
 
         {/* Easy Difficulty Section */}
-        <div className="tech-card mb-6 animate-fade-in" style={{ animationDelay: '100ms' }}>
+        <div className="tech-card mb-6 animate-fade-in" style={{ animationDelay: '100ms' }} data-section="easy">
           <button
             onClick={() => toggleSection('easy')}
             className="w-full flex items-center justify-between text-left p-6 hover:bg-muted/30 transition-colors rounded-lg"
@@ -65,6 +65,18 @@ export function HackTheBoxPage() {
                 
                 {expandedWriteups.includes('training-day') && (
                   <div className="p-6 space-y-8 bg-card">
+                    {/* Sherlock Info */}
+                    <div className="bg-primary/5 border border-primary/20 rounded-lg p-6">
+                      <h4 className="text-lg font-semibold text-primary mb-3">Sherlock Description</h4>
+                      <p className="text-foreground/80 mb-4">A reverse engineering challenge for beginners.</p>
+                      <div className="mt-4">
+                        <h5 className="text-sm font-semibold text-secondary mb-2">Tools Used</h5>
+                        <div className="flex flex-wrap gap-2">
+                          <span className="px-3 py-1 bg-background rounded-md text-sm font-mono">PeStudio</span>
+                          <span className="px-3 py-1 bg-background rounded-md text-sm font-mono">Ghidra</span>
+                        </div>
+                      </div>
+                    </div>
                     {/* Question 1 */}
                     <div className="space-y-4">
                       <h4 className="text-lg font-semibold text-secondary">Question 1</h4>
@@ -265,7 +277,10 @@ export function HackTheBoxPage() {
                       <button
                         onClick={() => {
                           toggleWriteup('training-day');
-                          window.scrollTo({ top: 0, behavior: 'smooth' });
+                          const easySection = document.querySelector('[data-section="easy"]');
+                          if (easySection) {
+                            easySection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                          }
                         }}
                         className="px-6 py-3 bg-primary/20 hover:bg-primary/30 text-primary rounded-lg transition-colors font-semibold"
                       >
@@ -288,6 +303,19 @@ export function HackTheBoxPage() {
                 
                 {expandedWriteups.includes('lockpick') && (
                   <div className="p-6 space-y-8 bg-card">
+                    {/* Sherlock Info */}
+                    <div className="bg-primary/5 border border-primary/20 rounded-lg p-6">
+                      <h4 className="text-lg font-semibold text-primary mb-3">Sherlock Description</h4>
+                      <p className="text-foreground/80 mb-4">In this Sherlock, you confront a serious threat at Forela: a significant number of UNIX servers have been infected by a suspected ransomware. Forela has decided not to negotiate with the attackers, putting the onus on you to recover the encrypted files. This task demands players to utilize their understanding of ransomware operations, UNIX server structures, and digital forensics to restore the affected files. It's a high-pressure race against time, testing your resilience, ingenuity, and technical prowess.</p>
+                      <div className="mt-4">
+                        <h5 className="text-sm font-semibold text-secondary mb-2">Tools Used</h5>
+                        <div className="flex flex-wrap gap-2">
+                          <span className="px-3 py-1 bg-background rounded-md text-sm font-mono">Ghidra</span>
+                          <span className="px-3 py-1 bg-background rounded-md text-sm font-mono">Python Decryptor</span>
+                          <span className="px-3 py-1 bg-background rounded-md text-sm font-mono">File Hasher</span>
+                        </div>
+                      </div>
+                    </div>
                     {/* Question 1 */}
                     <div className="space-y-4">
                       <h4 className="text-lg font-semibold text-secondary">Question 1</h4>
@@ -431,7 +459,10 @@ export function HackTheBoxPage() {
                       <button
                         onClick={() => {
                           toggleWriteup('lockpick');
-                          window.scrollTo({ top: 0, behavior: 'smooth' });
+                          const easySection = document.querySelector('[data-section="easy"]');
+                          if (easySection) {
+                            easySection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                          }
                         }}
                         className="px-6 py-3 bg-primary/20 hover:bg-primary/30 text-primary rounded-lg transition-colors font-semibold"
                       >
@@ -454,6 +485,18 @@ export function HackTheBoxPage() {
                 
                 {expandedWriteups.includes('heartbreaker-continuum') && (
                   <div className="p-6 space-y-8 bg-card">
+                    {/* Sherlock Info */}
+                    <div className="bg-primary/5 border border-primary/20 rounded-lg p-6">
+                      <h4 className="text-lg font-semibold text-primary mb-3">Sherlock Description</h4>
+                      <p className="text-foreground/80 mb-4">Players in this Sherlock scenario will be investigating a malicious binary file that was executed by the victim. The file displays traits similar to the Love Bug virus, and players must analyze its impact on the system. This scenario is part of a trio of interconnected Sherlocks, but can also be enjoyed on its own.</p>
+                      <div className="mt-4">
+                        <h5 className="text-sm font-semibold text-secondary mb-2">Tools Used</h5>
+                        <div className="flex flex-wrap gap-2">
+                          <span className="px-3 py-1 bg-background rounded-md text-sm font-mono">PeStudio</span>
+                          <span className="px-3 py-1 bg-background rounded-md text-sm font-mono">CyberChef</span>
+                        </div>
+                      </div>
+                    </div>
                     {/* Question 1 */}
                     <div className="space-y-4">
                       <h4 className="text-lg font-semibold text-secondary">Question 1</h4>
@@ -606,7 +649,10 @@ export function HackTheBoxPage() {
                       <button
                         onClick={() => {
                           toggleWriteup('heartbreaker-continuum');
-                          window.scrollTo({ top: 0, behavior: 'smooth' });
+                          const easySection = document.querySelector('[data-section="easy"]');
+                          if (easySection) {
+                            easySection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                          }
                         }}
                         className="px-6 py-3 bg-primary/20 hover:bg-primary/30 text-primary rounded-lg transition-colors font-semibold"
                       >
@@ -629,6 +675,20 @@ export function HackTheBoxPage() {
                 
                 {expandedWriteups.includes('opsalwarkameez') && (
                   <div className="p-6 space-y-8 bg-card">
+                    {/* Sherlock Info */}
+                    <div className="bg-primary/5 border border-primary/20 rounded-lg p-6">
+                      <h4 className="text-lg font-semibold text-primary mb-3">Sherlock Description</h4>
+                      <p className="text-foreground/80 mb-4">Super-Star is the first Sherlock challenge in the Operation Salwaar Kameez campaign. In this challenge, players will learn how to analyze Node.js malware executing compiled V8 JavaScript.</p>
+                      <div className="mt-4">
+                        <h5 className="text-sm font-semibold text-secondary mb-2">Tools Used</h5>
+                        <div className="flex flex-wrap gap-2">
+                          <span className="px-3 py-1 bg-background rounded-md text-sm font-mono">Process Hacker</span>
+                          <span className="px-3 py-1 bg-background rounded-md text-sm font-mono">Wireshark</span>
+                          <span className="px-3 py-1 bg-background rounded-md text-sm font-mono">CyberChef</span>
+                          <span className="px-3 py-1 bg-background rounded-md text-sm font-mono">Floss</span>
+                        </div>
+                      </div>
+                    </div>
                     {/* Question 1 */}
                     <div className="space-y-4">
                       <h4 className="text-lg font-semibold text-secondary">Question 1</h4>
@@ -777,7 +837,10 @@ export function HackTheBoxPage() {
                       <button
                         onClick={() => {
                           toggleWriteup('opsalwarkameez');
-                          window.scrollTo({ top: 0, behavior: 'smooth' });
+                          const easySection = document.querySelector('[data-section="easy"]');
+                          if (easySection) {
+                            easySection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                          }
                         }}
                         className="px-6 py-3 bg-primary/20 hover:bg-primary/30 text-primary rounded-lg transition-colors font-semibold"
                       >

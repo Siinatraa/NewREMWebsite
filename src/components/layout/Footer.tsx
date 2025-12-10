@@ -10,7 +10,7 @@ export function Footer() {
               &copy; {new Date().getFullYear()} REM Analysis. All rights reserved.
             </p>
             <p className="text-xs text-muted-foreground mt-1">
-              Documenting the journey through malware reverse engineering
+              Documenting my progress of malware reverse engineering
             </p>
           </div>
 

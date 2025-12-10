@@ -115,9 +115,14 @@ export function AboutPage() {
         {/* Current Goal */}
         <div className="mt-12 text-center p-8 bg-gradient-to-r from-primary/10 to-secondary/10 rounded-lg border border-primary/20 animate-fade-in" style={{ animationDelay: '800ms' }}>
           <p className="text-lg font-semibold text-primary mb-2">Current Goal</p>
-          <p className="text-2xl font-bold glow-text">
+          <a 
+            href="https://www.giac.org/certifications/reverse-engineering-malware-grem/" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="inline-block text-2xl font-bold glow-text hover:text-primary transition-colors cursor-pointer"
+          >
             GIAC FOR610 GREM Certification
-          </p>
+          </a>
           <p className="text-muted-foreground mt-2">
             Reverse Engineering Malware
           </p>
