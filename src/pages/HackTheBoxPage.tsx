@@ -259,6 +259,19 @@ export function HackTheBoxPage() {
                         </div>
                       </div>
                     </div>
+
+                    {/* Close Button */}
+                    <div className="mt-8 flex justify-center">
+                      <button
+                        onClick={() => {
+                          toggleWriteup('training-day');
+                          window.scrollTo({ top: 0, behavior: 'smooth' });
+                        }}
+                        className="px-6 py-3 bg-primary/20 hover:bg-primary/30 text-primary rounded-lg transition-colors font-semibold"
+                      >
+                        Close Write-up & Return to Top
+                      </button>
+                    </div>
                   </div>
                 )}
               </div>
@@ -411,6 +424,19 @@ export function HackTheBoxPage() {
                           </p>
                         </div>
                       </div>
+                    </div>
+
+                    {/* Close Button */}
+                    <div className="mt-8 flex justify-center">
+                      <button
+                        onClick={() => {
+                          toggleWriteup('lockpick');
+                          window.scrollTo({ top: 0, behavior: 'smooth' });
+                        }}
+                        className="px-6 py-3 bg-primary/20 hover:bg-primary/30 text-primary rounded-lg transition-colors font-semibold"
+                      >
+                        Close Write-up & Return to Top
+                      </button>
                     </div>
                   </div>
                 )}
@@ -574,6 +600,19 @@ export function HackTheBoxPage() {
                         </p>
                       </div>
                     </div>
+
+                    {/* Close Button */}
+                    <div className="mt-8 flex justify-center">
+                      <button
+                        onClick={() => {
+                          toggleWriteup('heartbreaker-continuum');
+                          window.scrollTo({ top: 0, behavior: 'smooth' });
+                        }}
+                        className="px-6 py-3 bg-primary/20 hover:bg-primary/30 text-primary rounded-lg transition-colors font-semibold"
+                      >
+                        Close Write-up & Return to Top
+                      </button>
+                    </div>
                   </div>
                 )}
               </div>
@@ -668,7 +707,6 @@ export function HackTheBoxPage() {
                       <p className="text-foreground/70 text-sm">Again being unfamiliar with Javascript Malware I did a simple google search for Node.js modules used for VM's and looked through some of the documentation. This is where I found the first part of this answer. To find the second part of the question I searched through the string output file for what I found in the documentation.</p>
                       <img src="https://cdn-ai.onspace.ai/onspace/files/oSMXociMrfV88nULmHSsvu/image_(17).png" alt="VM documentation" className="rounded-lg border border-border w-full" />
                       <p className="text-foreground/70 text-sm">Above we see several strings I can search but more specifically the "script.runInNewContext", this allows you to run code in the new VM instance. Searching this in the Output we see right under our Base64 encoded Reverse Shell!</p>
-                      <img src="https://cdn-ai.onspace.ai/onspace/files/AHYicSdcVLT23o9SvoCSzK/image_(18).png" alt="runInNewContext in code" className="rounded-lg border border-border w-full" />
                     </div>
 
                     {/* Question 8 */}
@@ -681,7 +719,7 @@ export function HackTheBoxPage() {
                       <p className="text-foreground/70 text-sm">Again had to do a little research into this. So in Node.js there is a file with a ".jsc" extension, this is our Bytecode or what Node.js calls ByteNode file.</p>
                       <p className="text-foreground/70 text-sm">Sidenote: We cannot find this via our Strings output so I had to install "npm install -g @electron/asar" which allows us to actually extract all the files in the NSIS file.</p>
                       <p className="text-foreground/70 text-sm">Okay so now that we installed the above tool and can actually parse the archive, going through this we found our .jsc file which is called "script.jsc". I opened it up in the HxD to get an overview of it but nothing too much. Since it's asking for the specific Win32 API used to execute shellcode I ran Floss (or you can do strings, either or) and came back with strings found in the file. There were very few APIs so it was pretty easy to choose the right answer. The CreateThread API creates a separate thread for execution within the virtual address space allocated to it. Since it allows execution we can safely assume this the API that executed the shellcode.</p>
-                      <img src="https://cdn-ai.onspace.ai/onspace/files/NT6aDsYkkmAKXqiv6N3EWF/image_(19).png" alt="CreateThread API" className="rounded-lg border border-border w-full" />
+                      <img src="https://cdn-ai.onspace.ai/onspace/files/AHYicSdcVLT23o9SvoCSzK/image_(18).png" alt="runInNewContext in code" className="rounded-lg border border-border w-full" />
                     </div>
 
                     {/* Question 9 */}
@@ -692,6 +730,7 @@ export function HackTheBoxPage() {
                         <p className="font-mono text-sm text-primary">Coupon1337</p>
                       </div>
                       <p className="text-foreground/70 text-sm">This was a little tricky to find and ended up looking up a walkthrough after several hours of attempting to find this. We need to use a specific decompiler for JSC files called View8, what this tool does is attempts to reconstruct the logic of the jsc file allowing us to pier more into the decompiled text. Looking through you'll find a large section containing a bunch of text in decimal format. Taking this and converting it via Cyberchef you find the answer.</p>
+                      <img src="https://cdn-ai.onspace.ai/onspace/files/NT6aDsYkkmAKXqiv6N3EWF/image_(19).png" alt="Coupon decompiled" className="rounded-lg border border-border w-full" />
                     </div>
 
                     {/* Review Section */}
@@ -731,6 +770,19 @@ export function HackTheBoxPage() {
                           </p>
                         </div>
                       </div>
+                    </div>
+
+                    {/* Close Button */}
+                    <div className="mt-8 flex justify-center">
+                      <button
+                        onClick={() => {
+                          toggleWriteup('opsalwarkameez');
+                          window.scrollTo({ top: 0, behavior: 'smooth' });
+                        }}
+                        className="px-6 py-3 bg-primary/20 hover:bg-primary/30 text-primary rounded-lg transition-colors font-semibold"
+                      >
+                        Close Write-up & Return to Top
+                      </button>
                     </div>
                   </div>
                 )}
