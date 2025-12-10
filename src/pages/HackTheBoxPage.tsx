@@ -68,7 +68,7 @@ export function HackTheBoxPage() {
                     {/* Sherlock Info */}
                     <div className="bg-primary/5 border border-primary/20 rounded-lg p-6">
                       <h4 className="text-lg font-semibold text-primary mb-3">Sherlock Description</h4>
-                      <p className="text-foreground/80 mb-4">A reverse engineering challenge for beginners.</p>
+                      <p className="text-foreground/80 mb-4">A reverse engineering challenge for beginners. A fresh new day, a well-rested cybersecurity professional—ready to learn something new after a chaotic week. Scrolling through challenges, they stumble upon TrainingDay, download the artifacts, and boom—three different binaries, each doing its own thing. Do they panic? Nope. This is exactly what they signed up for—some good old-fashioned reversing fun. If this sounds like you, what are you waiting for? Grab your debugger and dive in!</p>
                       <div className="mt-4">
                         <h5 className="text-sm font-semibold text-secondary mb-2">Tools Used</h5>
                         <div className="flex flex-wrap gap-2">
