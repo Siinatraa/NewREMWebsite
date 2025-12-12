@@ -1,6 +1,6 @@
-import { Terminal, ChevronDown, ChevronRight, Shield, ArrowLeft, Skull } from 'lucide-react';
+import { Terminal, ChevronDown, ChevronRight, Shield, ArrowLeft, Skull, Swords, Linkedin } from 'lucide-react';
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 
 // Red Team CTF write-ups page
 
@@ -26,7 +26,27 @@ export function RedTeamPage() {
   };
 
   return (
-    <div className="content-wrapper py-12 relative">
+    <div className="min-h-screen bg-black relative">
+      {/* Custom Red Team Header */}
+      <header className="sticky top-0 z-50 border-b border-red-500/30 bg-black/90 backdrop-blur-md">
+        <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+          <div className="flex items-center justify-between">
+            <Link to="/" className="flex items-center gap-2 group">
+              <Swords className="w-8 h-8 text-red-500 group-hover:text-red-400 transition-colors" />
+              <div>
+                <span className="text-xl font-bold text-red-500" style={{ textShadow: '0 0 20px rgba(239, 68, 68, 0.5)' }}>Red Team Ops</span>
+                <p className="text-xs text-red-400/70 font-mono">Offensive Security & Exploitation</p>
+              </div>
+            </Link>
+            <div className="hidden md:flex items-center gap-6">
+              <Link to="/" className="text-sm font-medium text-red-400/80 hover:text-red-400 transition-colors font-mono">Home</Link>
+              <Link to="/hack-the-box" className="text-sm font-medium text-red-400/80 hover:text-red-400 transition-colors font-mono">REM Analysis</Link>
+              <Link to="/about" className="text-sm font-medium text-red-400/80 hover:text-red-400 transition-colors font-mono">About</Link>
+            </div>
+          </div>
+        </nav>
+      </header>
+
       {/* Background effect */}
       <div className="fixed inset-0 pointer-events-none opacity-5">
         <div className="absolute inset-0" style={{
@@ -34,6 +54,8 @@ export function RedTeamPage() {
           animation: 'scan 8s linear infinite'
         }} />
       </div>
+
+      <div className="content-wrapper py-12 relative">
 
       <div className="max-w-6xl mx-auto">
         {/* Back Button */}
@@ -67,15 +89,13 @@ export function RedTeamPage() {
           <div className="relative bg-gradient-to-r from-red-950/90 to-red-900/90 border-2 border-red-500/50 rounded-lg p-6 shadow-lg shadow-red-500/20">
             <div className="flex items-start gap-4">
               <div className="relative">
-                <Shield className="w-6 h-6 text-red-400 flex-shrink-0 mt-1 animate-pulse" />
+                <Terminal className="w-6 h-6 text-red-400 flex-shrink-0 mt-1" />
                 <div className="absolute inset-0 bg-red-500/30 blur-lg" />
               </div>
               <div>
-                <h3 className="text-lg font-semibold text-red-400 mb-2 font-mono tracking-wider">[!] ETHICAL HACKING NOTICE</h3>
+                <h3 className="text-lg font-semibold text-red-400 mb-2 font-mono tracking-wider">About Red Team Operations</h3>
                 <p className="text-red-200/70 text-sm leading-relaxed font-mono">
-                  &gt; All techniques and exploits documented here are used exclusively in authorized lab environments.<br />
-                  &gt; These write-ups are for educational purposes only.<br />
-                  &gt; Always practice responsible disclosure and obtain proper authorization.
+                  Offensive security write-ups from Hack The Box CTF challenges. Documenting penetration testing techniques, exploitation methods, and privilege escalation tactics used in controlled lab environments.
                 </p>
               </div>
             </div>
@@ -186,6 +206,35 @@ export function RedTeamPage() {
           </div>
         </div>
       </div>
+
+      {/* Custom Red Team Footer */}
+      <footer className="relative z-10 border-t border-red-500/30 bg-black/90 backdrop-blur-sm mt-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+            <div className="text-center md:text-left">
+              <p className="text-sm text-red-400/80 font-mono">
+                &copy; {new Date().getFullYear()} Red Team Operations. Offensive Security Documentation.
+              </p>
+              <p className="text-xs text-red-400/60 mt-1 font-mono">
+                [!] All activities conducted in authorized lab environments only
+              </p>
+            </div>
+
+            <div className="flex items-center gap-4">
+              <a
+                href="https://www.linkedin.com/in/daniel-richardson-100b70308/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 text-sm text-red-400/80 hover:text-red-400 transition-colors group font-mono"
+              >
+                <Linkedin className="w-5 h-5 group-hover:text-red-400" />
+                <span>Connect on LinkedIn</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </footer>
+    </div>
     </div>
   );
 }
