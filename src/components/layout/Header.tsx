@@ -12,6 +12,7 @@ export function Header() {
     { name: 'Hack the Box', path: '/hack-the-box' },
     { name: 'Crackme', path: '/crackme' },
     { name: 'Real Malware', path: '/real-malware' },
+    { name: 'Other', path: '/other' },
   ];
 
   const isActive = (path: string) => location.pathname === path;

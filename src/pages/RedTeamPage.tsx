@@ -6,7 +6,7 @@ import { useNavigate, Link } from 'react-router-dom';
 
 export function RedTeamPage() {
   const navigate = useNavigate();
-  const [expandedSections, setExpandedSections] = useState<string[]>(['easy']);
+  const [expandedSections, setExpandedSections] = useState<string[]>([]);
   const [expandedWriteups, setExpandedWriteups] = useState<string[]>([]);
 
   const toggleSection = (section: string) => {
@@ -60,11 +60,11 @@ export function RedTeamPage() {
       <div className="max-w-6xl mx-auto">
         {/* Back Button */}
         <button
-          onClick={() => navigate('/hack-the-box')}
+          onClick={() => navigate('/')}
           className="mb-8 flex items-center gap-2 px-4 py-2 bg-red-950/30 hover:bg-red-900/40 border border-red-500/30 hover:border-red-500/60 text-red-400 rounded-lg transition-all group animate-fade-in"
         >
           <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
-          <span className="font-mono text-sm">Return to REM Analysis</span>
+          <span className="font-mono text-sm">Return to Home</span>
         </button>
 
         {/* Header */}
@@ -77,9 +77,9 @@ export function RedTeamPage() {
           </div>
           <h1 className="text-5xl font-bold mb-4 bg-gradient-to-r from-red-400 via-red-500 to-red-600 bg-clip-text text-transparent" style={{
             textShadow: '0 0 30px rgba(239, 68, 68, 0.5)'
-          }}>Red Team Operations</h1>
+          }}>Red Team</h1>
           <p className="text-red-300/80 max-w-2xl mx-auto font-mono text-sm tracking-wider">
-            [OFFENSIVE SECURITY] CTF Write-ups • Penetration Testing • Exploitation Techniques
+            CTF Write-ups • Penetration Testing • Exploitation Techniques
           </p>
         </div>
 
