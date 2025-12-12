@@ -201,7 +201,7 @@ export function HackTheBoxPage() {
                         <p className="font-mono text-sm text-primary">ESP+4</p>
                         <p className="font-mono text-sm text-primary">ESP+8</p>
                       </div>
-                      <p className="text-foreground/70 text-sm">To find the 1st Argument in a function you first start at the entry and find a function that has a lot of shit in it. For Baby 2 this is FUN_00401100. Since we know in Ghidra Param_X are arguments and the main function has a lot of shit in it near the entry point, the answers are looking right at us.</p>
+                      <p className="text-foreground/70 text-sm">To find the 1st Argument in a function you first start at the entry and find a function that has a lot of parameters in it. For Baby 2 this is FUN_00401100. Since we know in Ghidra Param_X are arguments, the main function has a lot of arguements in it, and its near the entry point, the answers are looking right at us.</p>
                       <img src="https://cdn-ai.onspace.ai/onspace/files/QZ5h7z2XduFDfYcvb4Li6P/image_(9).png" alt="Baby 2 parameters" className="rounded-lg border border-border w-full" />
                     </div>
 
@@ -226,7 +226,7 @@ export function HackTheBoxPage() {
                         <p className="font-mono text-sm text-primary">R8</p>
                         <p className="font-mono text-sm text-primary">R9</p>
                       </div>
-                      <p className="text-foreground/70 text-sm">Again find the main function near the entry with a lot of shit in it, this case is FUN_140001070.</p>
+                      <p className="text-foreground/70 text-sm">Again find the main function near the entry with a lot of Parameters in it, this case is FUN_140001070.</p>
                       <img src="https://cdn-ai.onspace.ai/onspace/files/VT8Bju7M8qiizU67TWLxHe/image_(11).png" alt="Baby 3 parameters" className="rounded-lg border border-border w-full" />
                     </div>
 
