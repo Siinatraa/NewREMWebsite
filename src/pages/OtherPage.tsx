@@ -1,8 +1,10 @@
-import { FileText, Youtube, ExternalLink } from 'lucide-react';
+import { FileText, Youtube, ExternalLink, Terminal, ArrowRight } from 'lucide-react';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 export function OtherPage() {
   const [activeTab, setActiveTab] = useState('youtube');
+  const navigate = useNavigate();
 
   return (
     <div className="content-wrapper py-12">
@@ -101,6 +103,39 @@ export function OtherPage() {
               </a>
             </div>
           )}
+        </div>
+
+        {/* Red Teaming Section */}
+        <div 
+          className="tech-card mb-12 animate-fade-in cursor-pointer group hover:border-red-500/50 transition-all bg-gradient-to-br from-red-500/5 to-orange-500/5" 
+          style={{ animationDelay: '200ms' }}
+          onClick={() => navigate('/red-team')}
+        >
+          <div className="flex items-center justify-between">
+            <div className="flex items-start gap-4 flex-1">
+              <div className="w-16 h-16 rounded-lg bg-gradient-to-br from-red-500/20 to-orange-500/20 flex items-center justify-center flex-shrink-0">
+                <Terminal className="w-8 h-8 text-red-500" />
+              </div>
+              <div className="flex-1">
+                <h2 className="text-2xl font-bold mb-2 group-hover:text-red-400 transition-colors">Red Team Operations</h2>
+                <p className="text-foreground/80 mb-4">
+                  Offensive security write-ups from Hack The Box CTF challenges. Explore penetration testing techniques, exploitation methods, and privilege escalation tactics.
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  <span className="px-3 py-1 bg-red-500/10 text-red-400 rounded-md text-sm font-mono border border-red-500/20">
+                    Penetration Testing
+                  </span>
+                  <span className="px-3 py-1 bg-orange-500/10 text-orange-400 rounded-md text-sm font-mono border border-orange-500/20">
+                    Exploitation
+                  </span>
+                  <span className="px-3 py-1 bg-yellow-500/10 text-yellow-400 rounded-md text-sm font-mono border border-yellow-500/20">
+                    Privilege Escalation
+                  </span>
+                </div>
+              </div>
+            </div>
+            <ArrowRight className="w-6 h-6 text-red-500 group-hover:translate-x-1 transition-transform flex-shrink-0 ml-4" />
+          </div>
         </div>
       </div>
     </div>

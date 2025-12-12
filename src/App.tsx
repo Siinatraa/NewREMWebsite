@@ -6,6 +6,7 @@ import { HackTheBoxPage } from './pages/HackTheBoxPage';
 import { CrackmePage } from './pages/CrackmePage';
 import { RealMalwarePage } from './pages/RealMalwarePage';
 import { OtherPage } from './pages/OtherPage';
+import { RedTeamPage } from './pages/RedTeamPage';
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
           <Route path="crackme" element={<CrackmePage />} />
           <Route path="real-malware" element={<RealMalwarePage />} />
           <Route path="other" element={<OtherPage />} />
+          <Route path="red-team" element={<RedTeamPage />} />
         </Route>
       </Routes>
     </Router>
