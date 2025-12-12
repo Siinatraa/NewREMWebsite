@@ -31,8 +31,8 @@ function App() {
           <Route path="crackme" element={<CrackmePage />} />
           <Route path="real-malware" element={<RealMalwarePage />} />
           <Route path="other" element={<OtherPage />} />
-          <Route path="red-team" element={<RedTeamPage />} />
         </Route>
+        <Route path="red-team" element={<RedTeamPage />} />
       </Routes>
     </Router>
   );

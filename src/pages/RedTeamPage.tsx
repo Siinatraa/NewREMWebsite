@@ -77,7 +77,7 @@ export function RedTeamPage() {
           </div>
           <h1 className="text-5xl font-bold mb-4 bg-gradient-to-r from-red-400 via-red-500 to-red-600 bg-clip-text text-transparent" style={{
             textShadow: '0 0 30px rgba(239, 68, 68, 0.5)'
-          }}>Red Team</h1>
+          }}>Red Teaming</h1>
           <p className="text-red-300/80 max-w-2xl mx-auto font-mono text-sm tracking-wider">
             CTF Write-ups • Penetration Testing • Exploitation Techniques
           </p>
