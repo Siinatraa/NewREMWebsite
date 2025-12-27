@@ -5,7 +5,7 @@ import { useState } from 'react';
 // Hack the Box write-ups page
 
 export function HackTheBoxPage() {
-  const [expandedSections, setExpandedSections] = useState<string[]>(['easy']);
+  const [expandedSections, setExpandedSections] = useState<string[]>([]);
   const [expandedWriteups, setExpandedWriteups] = useState<string[]>([]);
 
   const toggleSection = (section: string) => {
@@ -1041,6 +1041,162 @@ export function HackTheBoxPage() {
                       <button
                         onClick={() => {
                           toggleWriteup('opshieldwall6');
+                          const hardSection = document.querySelector('[data-section="hard"]');
+                          if (hardSection) {
+                            hardSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                          }
+                        }}
+                        className="px-6 py-3 bg-primary/20 hover:bg-primary/30 text-primary rounded-lg transition-colors font-semibold"
+                      >
+                        Close Write-up & Return to Top
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Lockpick2.0 Write-up */}
+              <div className="mt-6 border border-border rounded-lg overflow-hidden mb-6">
+                <button
+                  onClick={() => toggleWriteup('lockpick2.0')}
+                  className="w-full flex items-center justify-between text-left p-4 bg-muted/30 hover:bg-muted/50 transition-colors"
+                >
+                  <h3 className="text-xl font-semibold text-primary">Lockpick2.0</h3>
+                  {expandedWriteups.includes('lockpick2.0') ? <ChevronDown className="w-5 h-5" /> : <ChevronRight className="w-5 h-5" />}
+                </button>
+
+                {expandedWriteups.includes('lockpick2.0') && (
+                  <div className="p-6 space-y-8 bg-card">
+                    {/* Sherlock Info */}
+                    <div className="bg-primary/5 border border-primary/20 rounded-lg p-6">
+                      <h4 className="text-lg font-semibold text-primary mb-3">Sherlock Description</h4>
+                      <p className="text-foreground/80 mb-4">We've been hit by Ransomware again, but this time the threat actor seems to have upped their skillset. Once again a they've managed to encrypt a large set of our files. It is our policy NOT to negotiate with criminals. Please recover the files they have encrypted - we have no other option! Unfortunately our CEO is on a no-tech retreat and so can't be reached.</p>
+                      <div className="mt-4">
+                        <h5 className="text-sm font-semibold text-secondary mb-2">Tools Used</h5>
+                        <div className="flex flex-wrap gap-2">
+                          <span className="px-3 py-1 bg-background rounded-md text-sm font-mono">DIE</span>
+                          <span className="px-3 py-1 bg-background rounded-md text-sm font-mono">Ghidra</span>
+                          <span className="px-3 py-1 bg-background rounded-md text-sm font-mono">Cyber Chef</span>
+                          <span className="px-3 py-1 bg-background rounded-md text-sm font-mono">xxd</span>
+                          <span className="px-3 py-1 bg-background rounded-md text-sm font-mono">UPX</span>
+                        </div>
+                      </div>
+                    </div>
+                    {/* Question 1 */}
+                    <div className="space-y-4">
+                      <h4 className="text-lg font-semibold text-secondary">Question 1</h4>
+                      <p className="text-foreground/80">What was used to pack the malware?</p>
+                      <div className="bg-muted/50 rounded-lg p-4 border-l-4 border-primary">
+                        <p className="font-mono text-sm text-primary">UPX</p>
+                      </div>
+                      <p className="text-foreground/70 text-sm">We can put the malware sample in DIE and it will tell us what packer was used.</p>
+                      <img src="/assets/hackthebox/lockpick2.0/upx.png" alt="DIE showing UPX packer" className="rounded-lg border border-border w-full" />
+                    </div>
+
+                    {/* Question 2 */}
+                    <div className="space-y-4">
+                      <h4 className="text-lg font-semibold text-secondary">Question 2</h4>
+                      <p className="text-foreground/80">How much is the TA asking for?</p>
+                      <div className="bg-muted/50 rounded-lg p-4 border-l-4 border-primary">
+                        <p className="font-mono text-sm text-primary">£1000000</p>
+                      </div>
+                      <p className="text-foreground/70 text-sm">Reading the ransom note left behind it mentions the price</p>
+                      <img src="/assets/hackthebox/lockpick2.0/ransom_amount.png" alt="Ransom note showing amount" className="rounded-lg border border-border w-full" />
+                    </div>
+
+                    {/* Question 3 */}
+                    <div className="space-y-4">
+                      <h4 className="text-lg font-semibold text-secondary">Question 3</h4>
+                      <p className="text-foreground/80">What is the BTC wallet address the TA is asking for payment to?</p>
+                      <div className="bg-muted/50 rounded-lg p-4 border-l-4 border-primary">
+                        <p className="font-mono text-sm text-primary break-all">1BvBMSEYstWetqTFn5Au4m4GFg7xJaNVN2</p>
+                      </div>
+                      <p className="text-foreground/70 text-sm">Again looking at the Ransome note we find it</p>
+                      <img src="/assets/hackthebox/lockpick2.0/btc_wallet.png" alt="Ransom note showing BTC wallet" className="rounded-lg border border-border w-full" />
+                    </div>
+
+                    {/* Question 4 */}
+                    <div className="space-y-4">
+                      <h4 className="text-lg font-semibold text-secondary">Question 4</h4>
+                      <p className="text-foreground/80">What is the file hash of the key utilised by the attacker?</p>
+                      <div className="bg-muted/50 rounded-lg p-4 border-l-4 border-primary">
+                        <p className="font-mono text-sm text-primary break-all">950EFB05238D9893366A816E6609500F</p>
+                      </div>
+                      <p className="text-foreground/70 text-sm">So we know this was packed and in order to unpack it we can use UPX. This gives us the elf before it was packed so we can examine it in Ghidra.</p>
+                      <img src="/assets/hackthebox/lockpick2.0/upx_unpacked.png" alt="UPX unpacked" className="rounded-lg border border-border w-full" />
+                      <p className="text-foreground/70 text-sm">Poking around and looking at the functions there is one called “get_key_from_url”. This is just screaming at me, hey look at me! Since there was no other files given in the Zip im assuming this where we get our file from this url. Look at the C code windows there is xor_cipher. This is what will give the url</p>
+                      <img src="/assets/hackthebox/lockpick2.0/get_key_from_url.png" alt="Ghidra get_key_from_url function" className="rounded-lg border border-border w-full" />
+                      <p className="text-foreground/70 text-sm">We can click on K1 and HESB to get the parts of the XOR and decrypt it, K1 seems to be the input and HESB is the key, putting this in cyberchef should allow us to decrypt the URL</p>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <img src="/assets/hackthebox/lockpick2.0/xor_cipher_1.png" alt="XOR Cipher Part 1" className="rounded-lg border border-border w-full" />
+                        <img src="/assets/hackthebox/lockpick2.0/xor_cipher_2.png" alt="XOR Cipher Part 2" className="rounded-lg border border-border w-full" />
+                      </div>
+                      <p className="text-foreground/70 text-sm">Taking and putting these values in cyber chef we get our URL</p>
+                      <img src="/assets/hackthebox/lockpick2.0/cyberchef_url.png" alt="CyberChef showing URL" className="rounded-lg border border-border w-full" />
+                      <p className="text-foreground/70 text-sm">Trying to go directly to visit this website it downloads instantly and we can now answer the next two questions!</p>
+                    </div>
+
+                    {/* Question 5 */}
+                    <div className="space-y-4">
+                      <h4 className="text-lg font-semibold text-secondary">Question 5</h4>
+                      <p className="text-foreground/80">What is the file name of the key utlised by the attacker?</p>
+                      <div className="bg-muted/50 rounded-lg p-4 border-l-4 border-primary">
+                        <p className="font-mono text-sm text-primary">updater</p>
+                      </div>
+                      <img src="/assets/hackthebox/lockpick2.0/updater_hash.png" alt="Updater file hash" className="rounded-lg border border-border w-full" />
+                    </div>
+
+                    {/* Question 6 */}
+                    <div className="space-y-4">
+                      <h4 className="text-lg font-semibold text-secondary">Question 6</h4>
+                      <p className="text-foreground/80">Please confirm the name of the bank our CEO would like to takeover?</p>
+                      <div className="bg-muted/50 rounded-lg p-4 border-l-4 border-primary">
+                        <p className="font-mono text-sm text-primary">Notionwide</p>
+                      </div>
+                      <p className="text-foreground/70 text-sm">Now this was a little tricky to find out but I guess you can use the first couple bytes of a file to be used as “keys” and that exactly what this did. Using the xxd for the hex dump we get the bytes of the small key file</p>
+                      <img src="/assets/hackthebox/lockpick2.0/xxd_updater.png" alt="xxd dump of updater" className="rounded-lg border border-border w-full" />
+                      <p className="text-foreground/70 text-sm">What took me a little bit was also figuring out what was used to encrypt it. I originally thought the 24bes (which were the file extentions) was the right one but I was wrong. Putting the hash of the original file through virustotal I saw the actual method of encryption which is AES-256 with CBC. We can make our own recipe in cyberchef to help decrypt the files.</p>
+                      <img src="/assets/hackthebox/lockpick2.0/virustotal.png" alt="VirusTotal analysis" className="rounded-lg border border-border w-full" />
+                      <p className="text-foreground/70 text-sm">Since it encrypts with AES 256 the key is 32 bytes which is exactly the size of our file but we need the IV. Something I didn’t know was in ransomware that use AES 256 it is common using the first 16 bytes of the Key as the IV. Putting all of this in Cyber Chef we were able to decrypt our file!</p>
+                      <img src="/assets/hackthebox/lockpick2.0/cyberchef_decrypt.png" alt="CyberChef decryption" className="rounded-lg border border-border w-full" />
+                      <p className="text-foreground/70 text-sm">Downloading it via Cyber Chef and opening it we get out answers</p>
+                      <img src="/assets/hackthebox/lockpick2.0/notionwide.png" alt="Decrypted file showing Notionwide" className="rounded-lg border border-border w-full" />
+                    </div>
+
+                    {/* Question 7 */}
+                    <div className="space-y-4">
+                      <h4 className="text-lg font-semibold text-secondary">Question 7</h4>
+                      <p className="text-foreground/80">Which market is our CEO planning on expanding into? (Please answer with the wording utilised in the PDF)</p>
+                      <div className="bg-muted/50 rounded-lg p-4 border-l-4 border-primary">
+                        <p className="font-mono text-sm text-primary">Australian Market</p>
+                      </div>
+                      <p className="text-foreground/70 text-sm">This one gave me a little trouble for whatever reason, it wouldn’t open in Chrome so but opening it in Firefox worked.</p>
+                      <img src="/assets/hackthebox/lockpick2.0/australian_market.png" alt="Australian Market in PDF" className="rounded-lg border border-border w-full" />
+                    </div>
+
+                    {/* Review Section */}
+                    <div className="mt-8 p-6 bg-primary/10 border border-primary/30 rounded-lg">
+                      <h4 className="text-xl font-bold text-primary mb-4">Review</h4>
+                      <p className="text-foreground/80 leading-relaxed">
+                        Honestly this was not that bad at all. I was able to figure the first part pretty easily which suprised me for Hard rated Sherlock. I did enjoy decrypting the encrypted files which was pretty cool. It always fun to work with Ransomeware. I just find it so ironic, as of writing this, both Hard rated Sherlocks ive done havent been that bad at all. A lot of the medium rated ones are significantly hard I feel like, I have not been able to finish one yet.
+                      </p>
+                    </div>
+
+                    {/* What I Learned Section */}
+                    <div className="mt-6 p-6 bg-secondary/10 border border-secondary/30 rounded-lg">
+                      <h4 className="text-xl font-bold text-secondary mb-4">What I Learned</h4>
+                      <div className="space-y-4 text-foreground/80">
+                        <p className="leading-relaxed">
+                          Towards the end of the Sherlock I learned dealing AES-256 encryped malware was interesting. Especially how it common for it to take the first 16 bytes of a 32 byte key as the IV, that is some useful information to stick in the back of my mind for later. Also another thing was that files themselves can be used as key. They can take the first couple or how ever many bytes of the file and use that to encrypt the file. One thing I was able to lock onto pretty quickly was the website XOR and decrypt it, im proud of myself for being able to find that pretty quickly. Using Ghidra more and more its becoming a lot easier to recognize these things and how to find them as time goes on.
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* Close Button */}
+                    <div className="mt-8 flex justify-center">
+                      <button
+                        onClick={() => {
+                          toggleWriteup('lockpick2.0');
                           const hardSection = document.querySelector('[data-section="hard"]');
                           if (hardSection) {
                             hardSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
