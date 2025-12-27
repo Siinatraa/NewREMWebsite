@@ -889,7 +889,171 @@ export function HackTheBoxPage() {
           
           {expandedSections.includes('hard') && (
             <div className="px-6 pb-6">
-              <p className="text-muted-foreground text-center py-8">Hard difficulty write-ups coming soon...</p>
+              {/* OpShieldWall6 Write-up */}
+              <div className="mt-6 border border-border rounded-lg overflow-hidden mb-6">
+                <button
+                  onClick={() => toggleWriteup('opshieldwall6')}
+                  className="w-full flex items-center justify-between text-left p-4 bg-muted/30 hover:bg-muted/50 transition-colors"
+                >
+                  <h3 className="text-xl font-semibold text-primary">OpShieldWall6</h3>
+                  {expandedWriteups.includes('opshieldwall6') ? <ChevronDown className="w-5 h-5" /> : <ChevronRight className="w-5 h-5" />}
+                </button>
+
+                {expandedWriteups.includes('opshieldwall6') && (
+                  <div className="p-6 space-y-8 bg-card">
+                    {/* Sherlock Info */}
+                    <div className="bg-primary/5 border border-primary/20 rounded-lg p-6">
+                      <h4 className="text-lg font-semibold text-primary mb-3">Sherlock Description</h4>
+                      <p className="text-foreground/80 mb-4">OpShieldWall6 is a hard difficulty Sherlock where you are presented with a piece of ransomware sourcecode to analyse and report back on.</p>
+                      <p className="text-foreground/80 mb-4 italic">Creator Note: This is my first Hard REM Sherlock and I picked it because it sounds interesting. Im excited to see how I do on this and hope I learned a good amount!</p>
+                      <div className="mt-4">
+                        <h5 className="text-sm font-semibold text-secondary mb-2">Tools Used</h5>
+                        <div className="flex flex-wrap gap-2">
+                          <span className="px-3 py-1 bg-background rounded-md text-sm font-mono">VSCode</span>
+                          <span className="px-3 py-1 bg-background rounded-md text-sm font-mono">Python</span>
+                        </div>
+                      </div>
+                    </div>
+                    {/* Question 1 */}
+                    <div className="space-y-4">
+                      <h4 className="text-lg font-semibold text-secondary">Question 1</h4>
+                      <p className="text-foreground/80">What URL is the attacker using to acquire keys and IV for encryption?</p>
+                      <div className="bg-muted/50 rounded-lg p-4 border-l-4 border-primary">
+                        <p className="font-mono text-sm text-primary break-all">https://plankton-app-3qigq.ondigitalocean.app/connect</p>
+                      </div>
+                      <p className="text-foreground/70 text-sm">Whats interesting is this sherlock gives us the source code, we have a Ransom.cs file and I figured this would be a good place to start looking. Going through the source code really quickly I found several URL’s. Opened in VSCode, around line 138 we see a Hostname that looks like a website, line 161 we find an upload URL, Line 296 has the very last one for connections. To figure out which is the answer first we have to understand the context around it.</p>
+                      <p className="text-foreground/70 text-sm">Looking closer Line 138 is just a hostname but formated like a domain URL, looks like just a test name. The next line at 161 reading the Logic of it, it sets the client_id to a URL + kvp.Value (which is the IV), this is not used to acquire keys, its creating it. Going to the very last one we see at the end of the URL /connect , this tips me off this as this being the answer as the other 2 (really one of the other URLs).</p>
+                      <img src="/assets/hackthebox/opshieldwall6/q1_connect.png" alt="Question 1 Image" className="rounded-lg border border-border w-full" />
+                    </div>
+
+                    {/* Question 2 */}
+                    <div className="space-y-4">
+                      <h4 className="text-lg font-semibold text-secondary">Question 2</h4>
+                      <p className="text-foreground/80">What passphrase and hostname is the attacker using in the POST request?</p>
+                      <div className="bg-muted/50 rounded-lg p-4 border-l-4 border-primary">
+                        <p className="font-mono text-sm text-primary">sebh24, wkstn11.1234555.com</p>
+                      </div>
+                      <p className="text-foreground/70 text-sm">When looking for the URLs I actually came across the answer for this, around line 137/8 we see our answer.</p>
+                      <img src="/assets/hackthebox/opshieldwall6/q2_post_request.png" alt="Question 2 Image" className="rounded-lg border border-border w-full" />
+                    </div>
+
+                    {/* Question 3 */}
+                    <div className="space-y-4">
+                      <h4 className="text-lg font-semibold text-secondary">Question 3</h4>
+                      <p className="text-foreground/80">How many encryption methods has the attacker attempted in the source code?</p>
+                      <div className="bg-muted/50 rounded-lg p-4 border-l-4 border-primary">
+                        <p className="font-mono text-sm text-primary">3</p>
+                      </div>
+                      <p className="text-foreground/70 text-sm">So this one was pretty straigh forward, I followed the logic until the end and counted each encryption method found. Something to note you see the SHA256, this is not encryption. Hashing and Encryption are two different things. Going through we RSA, AES, and XOR</p>
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <img src="/assets/hackthebox/opshieldwall6/q3_rsa.png" alt="RSA Encryption" className="rounded-lg border border-border w-full" />
+                        <img src="/assets/hackthebox/opshieldwall6/q3_aes.png" alt="AES Encryption" className="rounded-lg border border-border w-full" />
+                        <img src="/assets/hackthebox/opshieldwall6/q3_xor.png" alt="XOR Encryption" className="rounded-lg border border-border w-full" />
+                      </div>
+                    </div>
+
+                    {/* Question 4 */}
+                    <div className="space-y-4">
+                      <h4 className="text-lg font-semibold text-secondary">Question 4</h4>
+                      <p className="text-foreground/80">Which function handles actual file encryption?</p>
+                      <div className="bg-muted/50 rounded-lg p-4 border-l-4 border-primary">
+                        <p className="font-mono text-sm text-primary">AES_Encrypt</p>
+                      </div>
+                      <p className="text-foreground/70 text-sm">This was pretty easy to find. I remember when scrolling through the source code there was a function to grab all the file types and I figured this would be around there. Once in that area it was pretty straight forward, a couple lines below we see the function</p>
+                      <img src="/assets/hackthebox/opshieldwall6/q4_aes_encrypt.png" alt="Question 4 Image" className="rounded-lg border border-border w-full" />
+                    </div>
+
+                    {/* Question 5 */}
+                    <div className="space-y-4">
+                      <h4 className="text-lg font-semibold text-secondary">Question 5</h4>
+                      <p className="text-foreground/80">What regex pattern was the attacker using to extract the Key and IV from the web response?</p>
+                      <div className="bg-muted/50 rounded-lg p-4 border-l-4 border-primary">
+                        <p className="font-mono text-sm text-primary break-all">Regex("\"(?&lt;Key&gt;[\\w]*)&lt;Value&gt;([\\s\\w\\d\\.\\\\\\-/:_\\+]+");</p>
+                      </div>
+                      <p className="text-foreground/70 text-sm">Scrolling up to line 115 we see the Regex, quite easy to find</p>
+                      <img src="/assets/hackthebox/opshieldwall6/q5_regex.png" alt="Question 5 Image" className="rounded-lg border border-border w-full" />
+                    </div>
+
+                    {/* Question 6 */}
+                    <div className="space-y-4">
+                      <h4 className="text-lg font-semibold text-secondary">Question 6</h4>
+                      <p className="text-foreground/80">Which directory was the attacker planning to encrypt when the source code was leaked ?</p>
+                      <div className="bg-muted/50 rounded-lg p-4 border-l-4 border-primary">
+                        <p className="font-mono text-sm text-primary">C:\Users\</p>
+                      </div>
+                      <p className="text-foreground/70 text-sm">Slightly below the Regex we see the string below which is our answer. Also I don’t think there was any other strings refercing a windows directory in the entire source code outside of this.</p>
+                      <img src="/assets/hackthebox/opshieldwall6/q6_directory.png" alt="Question 6 Image" className="rounded-lg border border-border w-full" />
+                    </div>
+
+                    {/* Question 7 */}
+                    <div className="space-y-4">
+                      <h4 className="text-lg font-semibold text-secondary">Question 7</h4>
+                      <p className="text-foreground/80">Whats the name of the anti-reversing technique the attacker devised, even though it's not utilized in the code?</p>
+                      <div className="bg-muted/50 rounded-lg p-4 border-l-4 border-primary">
+                        <p className="font-mono text-sm text-primary">Anti-Debugger</p>
+                      </div>
+                      <p className="text-foreground/70 text-sm">This actually was one of the first things I noticed when looking over the code was this Anti Dugging feature. After the ransomeware was ran it will kill the processes assocaited with REM Debuggers. If its started then a pop up will give you several “error” codes.</p>
+                      <img src="/assets/hackthebox/opshieldwall6/q7_anti_debugger.png" alt="Question 7 Image" className="rounded-lg border border-border w-full" />
+                    </div>
+
+                    {/* Question 8 */}
+                    <div className="space-y-4">
+                      <h4 className="text-lg font-semibold text-secondary">Question 8</h4>
+                      <p className="text-foreground/80">Now that you are familiar with the encryption method, locate the Key and IV from the logs to decrypt PDF file and submit them as a flag.</p>
+                      <div className="bg-muted/50 rounded-lg p-4 border-l-4 border-primary">
+                        <p className="font-mono text-sm text-primary break-all">{"{52a7a6e99a0b8061228c7e0f93af5e6d774312553fd9e76bc943313d4538b599, 4882b425d9f6bcf91b380c1c802a1484}"}</p>
+                      </div>
+                      <p className="text-foreground/70 text-sm">So I thought I was gonna be smart and check the modified timestamp in the Encrypted file’s Properties and match the time to the log but it didnt work. Since that didnt work I had AI create a brute force script to try each key/IV to get the decrypted pdf file.</p>
+                      <img src="/assets/hackthebox/opshieldwall6/q8_brute_force.png" alt="Question 8 Image" className="rounded-lg border border-border w-full" />
+                    </div>
+
+                    {/* Question 9 */}
+                    <div className="space-y-4">
+                      <h4 className="text-lg font-semibold text-secondary">Question 9</h4>
+                      <p className="text-foreground/80">Now that you are familiar with the encryption method, locate the Key and IV from the logs to decrypt PDF file and submit them as a flag.</p>
+                      <div className="bg-muted/50 rounded-lg p-4 border-l-4 border-primary">
+                        <p className="font-mono text-sm text-primary">F55A, F55B, F55C</p>
+                      </div>
+                      <p className="text-foreground/70 text-sm">Once its decrypted its pretty straight forward</p>
+                      <img src="/assets/hackthebox/opshieldwall6/q9_variants.png" alt="Question 9 Image" className="rounded-lg border border-border w-full" />
+                    </div>
+
+                    {/* Review Section */}
+                    <div className="mt-8 p-6 bg-primary/10 border border-primary/30 rounded-lg">
+                      <h4 className="text-xl font-bold text-primary mb-4">Review</h4>
+                      <p className="text-foreground/80 leading-relaxed">
+                        Honestly this was super easy since it gave the source code, everything was already in plaintext there. I do not think this is an accuratly rated room. I guess if you had like Zero coding expierence and brandnew to the cybersecurity field in general I’d imagine this would be pretty difficult.
+                      </p>
+                    </div>
+
+                    {/* What I Learned Section */}
+                    <div className="mt-6 p-6 bg-secondary/10 border border-secondary/30 rounded-lg">
+                      <h4 className="text-xl font-bold text-secondary mb-4">What I Learned</h4>
+                      <div className="space-y-4 text-foreground/80">
+                        <p className="leading-relaxed">
+                          I really didn’t learn too much, I guess maybe reading CS code but I could already follow the logic easily based off of previous expiernce coding/scripting.
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* Close Button */}
+                    <div className="mt-8 flex justify-center">
+                      <button
+                        onClick={() => {
+                          toggleWriteup('opshieldwall6');
+                          const hardSection = document.querySelector('[data-section="hard"]');
+                          if (hardSection) {
+                            hardSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                          }
+                        }}
+                        className="px-6 py-3 bg-primary/20 hover:bg-primary/30 text-primary rounded-lg transition-colors font-semibold"
+                      >
+                        Close Write-up & Return to Top
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
           )}
         </div>
