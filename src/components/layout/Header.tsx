@@ -10,7 +10,7 @@ export function Header() {
     { name: 'Home', path: '/' },
     { name: 'About', path: '/about' },
     { name: 'Hack the Box', path: '/hack-the-box' },
-    { name: 'Crackme', path: '/crackme' },
+    { name: 'MalOps', path: '/malops' },
     { name: 'Real Malware', path: '/real-malware' },
     { name: 'Other', path: '/other' },
   ];

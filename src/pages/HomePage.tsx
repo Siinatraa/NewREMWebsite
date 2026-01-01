@@ -10,10 +10,10 @@ const categories = [
     gradient: 'from-primary/20 to-primary/5',
   },
   {
-    title: 'Crackme',
+    title: 'MalOps',
     description: 'Reverse engineering challenges focusing on binary analysis and protection mechanisms.',
     icon: Lock,
-    path: '/crackme',
+    path: '/malops',
     gradient: 'from-secondary/20 to-secondary/5',
   },
   {
