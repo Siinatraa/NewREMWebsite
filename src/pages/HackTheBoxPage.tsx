@@ -869,13 +869,13 @@ export function HackTheBoxPage() {
           
           {expandedSections.includes('medium') && (
             <div className="px-6 pb-6">
-              {/* Sneak Keys Write-up */}
+              {/* SneakyKeys Write-up */}
               <div className="mt-6 border border-border rounded-lg overflow-hidden mb-6">
                 <button
                   onClick={() => toggleWriteup('sneak-keys')}
                   className="w-full flex items-center justify-between text-left p-4 bg-muted/30 hover:bg-muted/50 transition-colors"
                 >
-                  <h3 className="text-xl font-semibold text-primary">Sneak Keys</h3>
+                  <h3 className="text-xl font-semibold text-primary">SneakyKeys</h3>
                   {expandedWriteups.includes('sneak-keys') ? <ChevronDown className="w-5 h-5" /> : <ChevronRight className="w-5 h-5" />}
                 </button>
 
@@ -901,7 +901,7 @@ export function HackTheBoxPage() {
                         <p className="font-mono text-sm text-primary">ChaCha20</p>
                       </div>
                       <p className="text-foreground/70 text-sm">I tracked back an interesting looking string “SOFTWARE\\Microsoft\\Cryptography” and was looking around here to find a possible encryption method and I came across this. If I believe correctly ChaCha is used almost specifically by Microsoft or at least they created it</p>
-                      <img src="/assets/hackthebox/sneak-keys/q1_encryption.png" alt="ChaCha20 encryption" className="rounded-lg border border-border w-full" />
+                      <img src="/assets/hackthebox/sneakykeys/q1_encryption.png" alt="ChaCha20 encryption" className="rounded-lg border border-border w-full" />
                     </div>
 
                     {/* Question 2 */}
@@ -913,9 +913,9 @@ export function HackTheBoxPage() {
                       </div>
                       <p className="text-foreground/70 text-sm">This wasnt too bad to find but took a couple of search terms in the Symbol Table to find. Have the context of the whole function you see it copying, getting its file path, etc… When searching the Microsoft Documentation for SHGetFolderPathA you see the second paramater (Looking at the function, the number 7) coorelates with “[in] csidl”, when looking up what the 7th number in CSIDL means we get its a startup directory seen in screenshot 3</p>
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <img src="/assets/hackthebox/sneak-keys/q2_directory_1.png" alt="Directory Image 1" className="rounded-lg border border-border w-full" />
-                        <img src="/assets/hackthebox/sneak-keys/q2_directory_2.png" alt="Directory Image 2" className="rounded-lg border border-border w-full" />
-                        <img src="/assets/hackthebox/sneak-keys/q2_directory_3.png" alt="Directory Image 3" className="rounded-lg border border-border w-full" />
+                        <img src="/assets/hackthebox/sneakykeys/q2_directory_1.png" alt="Directory Image 1" className="rounded-lg border border-border w-full" />
+                        <img src="/assets/hackthebox/sneakykeys/q2_directory_2.png" alt="Directory Image 2" className="rounded-lg border border-border w-full" />
+                        <img src="/assets/hackthebox/sneakykeys/q2_directory_3.png" alt="Directory Image 3" className="rounded-lg border border-border w-full" />
                       </div>
                     </div>
 
@@ -928,8 +928,8 @@ export function HackTheBoxPage() {
                       </div>
                       <p className="text-foreground/70 text-sm">So this took a little bit of tracking down and researching to get the answer. I knew I was in the right area but just hard a little bit of a difficult time to figure it out but wasnt too bad. So again searching the symbol table I was looking for anything relating to C2 and I came across “socket”. I thought this was my answer but it led to a dead end as the last parameter sets the port but it was set to 0 which meant it this specific API did not make the choice of port. I pivoted to “htons” which some research reveals it stands for Host to Network Short to allow connections. It has 1 parameter, which is in the screenshot below. This give us the port so now we have to track the value down, luckily you can just hover over it and it will open a little window. Looking at the window we see the byte the Microsoft Documentation was talking about ; “29 1a 00 00” which equals 6697. Now what runs on port 6697? Internet Chat Relay or IRC</p>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <img src="/assets/hackthebox/sneak-keys/q3_protocol_1.png" alt="IRC Protocol Image 1" className="rounded-lg border border-border w-full" />
-                        <img src="/assets/hackthebox/sneak-keys/q3_protocol_2.png" alt="IRC Protocol Image 2" className="rounded-lg border border-border w-full" />
+                        <img src="/assets/hackthebox/sneakykeys/q3_protocol_1.png" alt="IRC Protocol Image 1" className="rounded-lg border border-border w-full" />
+                        <img src="/assets/hackthebox/sneakykeys/q3_protocol_2.png" alt="IRC Protocol Image 2" className="rounded-lg border border-border w-full" />
                       </div>
                     </div>
 
@@ -944,8 +944,8 @@ export function HackTheBoxPage() {
                       <p className="text-foreground/70 text-sm">1. Look at the symbol table and search # and you will see it, this for some reason did register this was the answer</p>
                       <p className="text-foreground/70 text-sm">2. Now this was pretty easy in the pcap, I filtered for port 6697 (IRC Traffic) and followed the TCP Stream and was able to search the “#” until I found it.</p>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                         <img src="/assets/hackthebox/sneak-keys/q4_channel_1.png" alt="Channel Image 1" className="rounded-lg border border-border w-full" />
-                         <img src="/assets/hackthebox/sneak-keys/q4_channel_2.png" alt="Channel Image 2" className="rounded-lg border border-border w-full" />
+                         <img src="/assets/hackthebox/sneakykeys/q4_channel_1.png" alt="Channel Image 1" className="rounded-lg border border-border w-full" />
+                         <img src="/assets/hackthebox/sneakykeys/q4_channel_2.png" alt="Channel Image 2" className="rounded-lg border border-border w-full" />
                       </div>
                     </div>
 
@@ -972,9 +972,9 @@ export function HackTheBoxPage() {
                       <p className="text-foreground/70 text-sm">3. One_Nonce</p>
                       <p className="text-foreground/70 text-sm">Me and AI were bashing our heads in the wall because I was confident it used the Super_K as the key and One Nonce as the nonce. This turned out to be a red hearing (Duper Super Annoying if you ask me). The key was actually the GUID which was found in the PCAP IRC Stream we found earlier while the nonce was the same. I had AI make a python one liner for me to decrypt it which was used to answer the questions after this.</p>
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <img src="/assets/hackthebox/sneak-keys/q6_key_1.png" alt="Key Image 1" className="rounded-lg border border-border w-full" />
-                        <img src="/assets/hackthebox/sneak-keys/q6_key_2.png" alt="Key Image 2" className="rounded-lg border border-border w-full" />
-                        <img src="/assets/hackthebox/sneak-keys/q6_key_3.png" alt="Key Image 3" className="rounded-lg border border-border w-full" />
+                        <img src="/assets/hackthebox/sneakykeys/q6_key_1.png" alt="Key Image 1" className="rounded-lg border border-border w-full" />
+                        <img src="/assets/hackthebox/sneakykeys/q6_key_2.png" alt="Key Image 2" className="rounded-lg border border-border w-full" />
+                        <img src="/assets/hackthebox/sneakykeys/q6_key_3.png" alt="Key Image 3" className="rounded-lg border border-border w-full" />
                       </div>
                     </div>
 
@@ -986,7 +986,7 @@ export function HackTheBoxPage() {
                         <p className="font-mono text-sm text-primary">John</p>
                       </div>
                       <p className="text-foreground/70 text-sm">With our new found Key:Nonce from above we can decrypt the Communication in the IRC PCAP Stream</p>
-                      <img src="/assets/hackthebox/sneak-keys/q7_alice_john.png" alt="Alice communicating with John" className="rounded-lg border border-border w-full" />
+                      <img src="/assets/hackthebox/sneakykeys/q7_alice_john.png" alt="Alice communicating with John" className="rounded-lg border border-border w-full" />
                     </div>
 
                     {/* Question 8 */}
@@ -997,7 +997,7 @@ export function HackTheBoxPage() {
                         <p className="font-mono text-sm text-primary">ALICE1SO</p>
                       </div>
                       <p className="text-foreground/70 text-sm">Again using the same thing to decrypt the other string</p>
-                      <img src="/assets/hackthebox/sneak-keys/q8_password.png" alt="Leaked password" className="rounded-lg border border-border w-full" />
+                      <img src="/assets/hackthebox/sneakykeys/q8_password.png" alt="Leaked password" className="rounded-lg border border-border w-full" />
                     </div>
 
                     {/* Close Button */}
