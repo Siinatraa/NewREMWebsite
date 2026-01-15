@@ -855,7 +855,7 @@ export function HackTheBoxPage() {
         </div>
 
         {/* Medium Difficulty Section */}
-        <div className="tech-card mb-6 animate-fade-in" style={{ animationDelay: '200ms' }}>
+        <div className="tech-card mb-6 animate-fade-in" style={{ animationDelay: '200ms' }} data-section="medium">
           <button
             onClick={() => toggleSection('medium')}
             className="w-full flex items-center justify-between text-left p-6 hover:bg-muted/30 transition-colors rounded-lg"
@@ -869,7 +869,155 @@ export function HackTheBoxPage() {
           
           {expandedSections.includes('medium') && (
             <div className="px-6 pb-6">
-              <p className="text-muted-foreground text-center py-8">Medium difficulty write-ups coming soon...</p>
+              {/* Sneak Keys Write-up */}
+              <div className="mt-6 border border-border rounded-lg overflow-hidden mb-6">
+                <button
+                  onClick={() => toggleWriteup('sneak-keys')}
+                  className="w-full flex items-center justify-between text-left p-4 bg-muted/30 hover:bg-muted/50 transition-colors"
+                >
+                  <h3 className="text-xl font-semibold text-primary">Sneak Keys</h3>
+                  {expandedWriteups.includes('sneak-keys') ? <ChevronDown className="w-5 h-5" /> : <ChevronRight className="w-5 h-5" />}
+                </button>
+
+                {expandedWriteups.includes('sneak-keys') && (
+                  <div className="p-6 space-y-8 bg-card">
+                    {/* Sherlock Info */}
+                    <div className="bg-primary/5 border border-primary/20 rounded-lg p-6">
+                      <h4 className="text-lg font-semibold text-primary mb-3">Sherlock Description</h4>
+                      <p className="text-foreground/80 mb-4">Alice, an employee of your company, downloaded a malware disguised as a security update. The malware captured her passwords, leaking sensitive information. Your task as an member of the IT team is to identify the critical information that was leaked and take immediate action to secure the compromised accounts</p>
+                      <div className="mt-4">
+                        <h5 className="text-sm font-semibold text-secondary mb-2">Tools Used</h5>
+                        <div className="flex flex-wrap gap-2">
+                          <span className="px-3 py-1 bg-background rounded-md text-sm font-mono">Ghidra</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Question 1 */}
+                    <div className="space-y-4">
+                      <h4 className="text-lg font-semibold text-secondary">Question 1</h4>
+                      <p className="text-foreground/80">Which encryption algorithm is used by the malware to protect its strings and commands (view constants)?</p>
+                      <div className="bg-muted/50 rounded-lg p-4 border-l-4 border-primary">
+                        <p className="font-mono text-sm text-primary">ChaCha20</p>
+                      </div>
+                      <p className="text-foreground/70 text-sm">I tracked back an interesting looking string “SOFTWARE\\Microsoft\\Cryptography” and was looking around here to find a possible encryption method and I came across this. If I believe correctly ChaCha is used almost specifically by Microsoft or at least they created it</p>
+                      <img src="/assets/hackthebox/sneak-keys/q1_encryption.png" alt="ChaCha20 encryption" className="rounded-lg border border-border w-full" />
+                    </div>
+
+                    {/* Question 2 */}
+                    <div className="space-y-4">
+                      <h4 className="text-lg font-semibold text-secondary">Question 2</h4>
+                      <p className="text-foreground/80">Which directory does the malware use to drop its duplicated copy ?</p>
+                      <div className="bg-muted/50 rounded-lg p-4 border-l-4 border-primary">
+                        <p className="font-mono text-sm text-primary break-all">\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup\</p>
+                      </div>
+                      <p className="text-foreground/70 text-sm">This wasnt too bad to find but took a couple of search terms in the Symbol Table to find. Have the context of the whole function you see it copying, getting its file path, etc… When searching the Microsoft Documentation for SHGetFolderPathA you see the second paramater (Looking at the function, the number 7) coorelates with “[in] csidl”, when looking up what the 7th number in CSIDL means we get its a startup directory seen in screenshot 3</p>
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <img src="/assets/hackthebox/sneak-keys/q2_directory_1.png" alt="Directory Image 1" className="rounded-lg border border-border w-full" />
+                        <img src="/assets/hackthebox/sneak-keys/q2_directory_2.png" alt="Directory Image 2" className="rounded-lg border border-border w-full" />
+                        <img src="/assets/hackthebox/sneak-keys/q2_directory_3.png" alt="Directory Image 3" className="rounded-lg border border-border w-full" />
+                      </div>
+                    </div>
+
+                    {/* Question 3 */}
+                    <div className="space-y-4">
+                      <h4 className="text-lg font-semibold text-secondary">Question 3</h4>
+                      <p className="text-foreground/80">Which protocol does the malware rely on to communicate with its command server?</p>
+                      <div className="bg-muted/50 rounded-lg p-4 border-l-4 border-primary">
+                        <p className="font-mono text-sm text-primary">IRC</p>
+                      </div>
+                      <p className="text-foreground/70 text-sm">So this took a little bit of tracking down and researching to get the answer. I knew I was in the right area but just hard a little bit of a difficult time to figure it out but wasnt too bad. So again searching the symbol table I was looking for anything relating to C2 and I came across “socket”. I thought this was my answer but it led to a dead end as the last parameter sets the port but it was set to 0 which meant it this specific API did not make the choice of port. I pivoted to “htons” which some research reveals it stands for Host to Network Short to allow connections. It has 1 parameter, which is in the screenshot below. This give us the port so now we have to track the value down, luckily you can just hover over it and it will open a little window. Looking at the window we see the byte the Microsoft Documentation was talking about ; “29 1a 00 00” which equals 6697. Now what runs on port 6697? Internet Chat Relay or IRC</p>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <img src="/assets/hackthebox/sneak-keys/q3_protocol_1.png" alt="IRC Protocol Image 1" className="rounded-lg border border-border w-full" />
+                        <img src="/assets/hackthebox/sneak-keys/q3_protocol_2.png" alt="IRC Protocol Image 2" className="rounded-lg border border-border w-full" />
+                      </div>
+                    </div>
+
+                    {/* Question 4 */}
+                    <div className="space-y-4">
+                      <h4 className="text-lg font-semibold text-secondary">Question 4</h4>
+                      <p className="text-foreground/80">Which channel does the malware use to store the captured data?</p>
+                      <div className="bg-muted/50 rounded-lg p-4 border-l-4 border-primary">
+                        <p className="font-mono text-sm text-primary">#Key_Storage</p>
+                      </div>
+                      <p className="text-foreground/70 text-sm">Now I am unfamiliar with IRC so I had to research what “Channel” means and this is the room it connects to usually denotated by a #. I was looking around in Ghidra in the symbol table and came across the answer but didn’t realize it. It wasnt until I looked in the pcap provided it clicked. I will show both ways to find it.</p>
+                      <p className="text-foreground/70 text-sm">1. Look at the symbol table and search # and you will see it, this for some reason did register this was the answer</p>
+                      <p className="text-foreground/70 text-sm">2. Now this was pretty easy in the pcap, I filtered for port 6697 (IRC Traffic) and followed the TCP Stream and was able to search the “#” until I found it.</p>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                         <img src="/assets/hackthebox/sneak-keys/q4_channel_1.png" alt="Channel Image 1" className="rounded-lg border border-border w-full" />
+                         <img src="/assets/hackthebox/sneak-keys/q4_channel_2.png" alt="Channel Image 2" className="rounded-lg border border-border w-full" />
+                      </div>
+                    </div>
+
+                    {/* Question 5 */}
+                    <div className="space-y-4">
+                      <h4 className="text-lg font-semibold text-secondary">Question 5</h4>
+                      <p className="text-foreground/80">Which application is being targeted by the malware?</p>
+                      <div className="bg-muted/50 rounded-lg p-4 border-l-4 border-primary">
+                        <p className="font-mono text-sm text-primary">Google Chrome</p>
+                      </div>
+                      <p className="text-foreground/70 text-sm">Honestly this was a shot in the dark and I somehow hit it</p>
+                    </div>
+
+                    {/* Question 6 */}
+                    <div className="space-y-4">
+                      <h4 className="text-lg font-semibold text-secondary">Question 6</h4>
+                      <p className="text-foreground/80">Identify the encryption key the malware applied before sending data from the victim system.</p>
+                      <div className="bg-muted/50 rounded-lg p-4 border-l-4 border-primary">
+                        <p className="font-mono text-sm text-primary break-all">9d9a51bfb38f496499ad31c1249d5a70:on3_n0nc</p>
+                      </div>
+                      <p className="text-foreground/70 text-sm">Okay so this was kinda pissing me off but I got it after about an hour and half with the help of AI as Im not good at decoding/decrypting stuff. So what gave it away was the Machine GUID in the Ghidra snippet seen in screenshot 1. So we found 3 things</p>
+                      <p className="text-foreground/70 text-sm">1. Machine GUID</p>
+                      <p className="text-foreground/70 text-sm">2. My_Duper_Super_K</p>
+                      <p className="text-foreground/70 text-sm">3. One_Nonce</p>
+                      <p className="text-foreground/70 text-sm">Me and AI were bashing our heads in the wall because I was confident it used the Super_K as the key and One Nonce as the nonce. This turned out to be a red hearing (Duper Super Annoying if you ask me). The key was actually the GUID which was found in the PCAP IRC Stream we found earlier while the nonce was the same. I had AI make a python one liner for me to decrypt it which was used to answer the questions after this.</p>
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <img src="/assets/hackthebox/sneak-keys/q6_key_1.png" alt="Key Image 1" className="rounded-lg border border-border w-full" />
+                        <img src="/assets/hackthebox/sneak-keys/q6_key_2.png" alt="Key Image 2" className="rounded-lg border border-border w-full" />
+                        <img src="/assets/hackthebox/sneak-keys/q6_key_3.png" alt="Key Image 3" className="rounded-lg border border-border w-full" />
+                      </div>
+                    </div>
+
+                    {/* Question 7 */}
+                    <div className="space-y-4">
+                      <h4 className="text-lg font-semibold text-secondary">Question 7</h4>
+                      <p className="text-foreground/80">Who is Alice communicating with?</p>
+                      <div className="bg-muted/50 rounded-lg p-4 border-l-4 border-primary">
+                        <p className="font-mono text-sm text-primary">John</p>
+                      </div>
+                      <p className="text-foreground/70 text-sm">With our new found Key:Nonce from above we can decrypt the Communication in the IRC PCAP Stream</p>
+                      <img src="/assets/hackthebox/sneak-keys/q7_alice_john.png" alt="Alice communicating with John" className="rounded-lg border border-border w-full" />
+                    </div>
+
+                    {/* Question 8 */}
+                    <div className="space-y-4">
+                      <h4 className="text-lg font-semibold text-secondary">Question 8</h4>
+                      <p className="text-foreground/80">What is the leaked password associated with Alice?</p>
+                      <div className="bg-muted/50 rounded-lg p-4 border-l-4 border-primary">
+                        <p className="font-mono text-sm text-primary">ALICE1SO</p>
+                      </div>
+                      <p className="text-foreground/70 text-sm">Again using the same thing to decrypt the other string</p>
+                      <img src="/assets/hackthebox/sneak-keys/q8_password.png" alt="Leaked password" className="rounded-lg border border-border w-full" />
+                    </div>
+
+                    {/* Close Button */}
+                    <div className="mt-8 flex justify-center">
+                      <button
+                        onClick={() => {
+                          toggleWriteup('sneak-keys');
+                          const mediumSection = document.querySelector('[data-section="medium"]');
+                          if (mediumSection) {
+                            mediumSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                          }
+                        }}
+                        className="px-6 py-3 bg-primary/20 hover:bg-primary/30 text-primary rounded-lg transition-colors font-semibold"
+                      >
+                        Close Write-up & Return to Top
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
           )}
         </div>
