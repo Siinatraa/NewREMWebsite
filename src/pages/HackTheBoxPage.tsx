@@ -1358,6 +1358,207 @@ export function HackTheBoxPage() {
                   </div>
                 )}
               </div>
+
+              {/* Holmes 2025 5: The Payload Write-up */}
+              <div className="mt-6 border border-border rounded-lg overflow-hidden mb-6">
+                <button
+                  onClick={() => toggleWriteup('the-payload')}
+                  className="w-full flex items-center justify-between text-left p-4 bg-muted/30 hover:bg-muted/50 transition-colors"
+                >
+                  <h3 className="text-xl font-semibold text-primary">Holmes 2025 5: The Payload</h3>
+                  {expandedWriteups.includes('the-payload') ? <ChevronDown className="w-5 h-5" /> : <ChevronRight className="w-5 h-5" />}
+                </button>
+
+                {expandedWriteups.includes('the-payload') && (
+                  <div className="p-6 space-y-8 bg-card">
+                    {/* Sherlock Info */}
+                    <div className="bg-primary/5 border border-primary/20 rounded-lg p-6">
+                      <h4 className="text-lg font-semibold text-primary mb-3">Sherlock Description</h4>
+                      <p className="text-foreground/80 mb-4">Analyze a stealthy malware sample that silently propagates across systems. Your task is to uncover its hidden logic, understand how it maintains persistence, and reveal the secret it’s designed to protect.</p>
+                      <div className="mt-4">
+                        <h5 className="text-sm font-semibold text-secondary mb-2">Tools Used</h5>
+                        <div className="flex flex-wrap gap-2">
+                          <span className="px-3 py-1 bg-background rounded-md text-sm font-mono">Ghidra</span>
+                          <span className="px-3 py-1 bg-background rounded-md text-sm font-mono">PeStudio</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Question 1 */}
+                    <div className="space-y-4">
+                      <h4 className="text-lg font-semibold text-secondary">Question 1</h4>
+                      <p className="text-foreground/80">During execution, the malware initializes the COM library on its main thread. Based on the imported functions, which DLL is responsible for providing this functionality?</p>
+                      <div className="bg-muted/50 rounded-lg p-4 border-l-4 border-primary">
+                        <p className="font-mono text-sm text-primary">ole32.dll</p>
+                      </div>
+                      <p className="text-foreground/70 text-sm">So this was easy to find but I didn't understand why at first. So I found the answer by putting the exe in PEStudio looking at the Libraries tab. I figured it would be one of these and Ive never seen ole32.dll and inputting it, turns out this was the answer. Well doing a little research looking at the Microsoft documentation it tells us clear as day the COM Library needs the ole32.dll to work. Also it didnt occur to me until writing this the question says LIBRARY, it should have clicked sooner</p>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <img src="/assets/hackthebox/thepayload/q1_ole32_1.png" alt="Question 1 Image 1" className="rounded-lg border border-border w-full" />
+                        <img src="/assets/hackthebox/thepayload/q1_ole32_2.png" alt="Question 1 Image 2" className="rounded-lg border border-border w-full" />
+                      </div>
+                    </div>
+
+                    {/* Question 2 */}
+                    <div className="space-y-4">
+                      <h4 className="text-lg font-semibold text-secondary">Question 2</h4>
+                      <p className="text-foreground/80">Which GUID is used by the binary to instantiate the object containing the data and code for execution?</p>
+                      <div className="bg-muted/50 rounded-lg p-4 border-l-4 border-primary">
+                        <p className="font-mono text-sm text-primary break-all">dabcd999-1234-4567-89ab-1234567890ff</p>
+                      </div>
+                      <p className="text-foreground/70 text-sm">Its time to load into Ghidra and see what we can find. Now how I found this was by breaking down the question into several parts.</p>
+                      <p className="text-foreground/70 text-sm">1. What is a GUID? What does it look like?</p>
+                      <p className="text-foreground/70 text-sm">2. What does Instantiate mean?</p>
+                      <p className="text-foreground/70 text-sm">Now we all know what a GUID is, Global Unique Identifier. This is a 128 bit hex string, it looks *Similar* to this → &#123;…..-…-…-…-…..&#125;. Question 1 down, now what the hell does Instantiate mean? Well this is the process of creating real and reusable from an Object from a class which acts as sort of a blueprint. Now what popped in my head after figuring this out does each Instantiate get its own GUID and the answer is yes! Cool!</p>
+                      <p className="text-foreground/70 text-sm">Now we have that context, What API is used to Instantiate Objects from the COM Library? Google is our friend here. The answer to the above question is “CoCreateInstance”. Searching the symbol table we find it and follow the conveniently named XREF: “ScanAndSpread”. Double clicking it makes it clear we have our GUID.</p>
+                      <p className="text-foreground/70 text-sm">Now if I was a CS student I probably would have understood this question but alas</p>
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <img src="/assets/hackthebox/thepayload/q2_guid_1.png" alt="Question 2 Image 1" className="rounded-lg border border-border w-full" />
+                        <img src="/assets/hackthebox/thepayload/q2_guid_2.png" alt="Question 2 Image 2" className="rounded-lg border border-border w-full" />
+                        <img src="/assets/hackthebox/thepayload/q2_guid_3.png" alt="Question 2 Image 3" className="rounded-lg border border-border w-full" />
+                      </div>
+                    </div>
+
+                    {/* Question 3 */}
+                    <div className="space-y-4">
+                      <h4 className="text-lg font-semibold text-secondary">Question 3</h4>
+                      <p className="text-foreground/80">Which .NET framework feature is the attacker using to bridge calls between a managed .NET class and an unmanaged native binary?</p>
+                      <div className="bg-muted/50 rounded-lg p-4 border-l-4 border-primary">
+                        <p className="font-mono text-sm text-primary">COM Interop</p>
+                      </div>
+                      <p className="text-foreground/70 text-sm">Again I wish I was a CS Student, I had to do some digging on what this actually meant. So lets break it down like before</p>
+                      <p className="text-foreground/70 text-sm">1. What is .NET</p>
+                      <p className="text-foreground/70 text-sm">2. What is Manged .NET Class</p>
+                      <p className="text-foreground/70 text-sm">3. What is an Unmanaged Native Binary?</p>
+                      <p className="text-foreground/70 text-sm">4. What does Bridge Calls mean?</p>
+                      <p className="text-foreground/70 text-sm">So .NET is a framework created by Microsoft for building/running Windows applications. A managed .NET class is a blueprint for creating objects and defining their properties. Unmanaged Binary in reference to .NET is a binary written in code outside of CLR. Bridge Calls basically means in this context, how do they talk.</p>
+                      <p className="text-foreground/70 text-sm">Adding all this together we get a dumbed down version of the question, What .NET Feature is used to let an Unmanaged and Managed Binary to talk to each other in relation to COM.</p>
+                      <p className="text-foreground/70 text-sm">Now I was initially confused as what they wanted, just the name of the feature, a specific API, etc… but they just wanted a feature of .NET relating to COM since it uses the COM Library. Google is our friend during this CTF. Simply search “.NET feature is used for non CLR Communication with COM”</p>
+                      <p className="text-foreground/70 text-sm">Note: There was no space between the ********* on HTB which confused me even further but the space counted as a *, annoying asf but this set the tone for the rest of the Sherlock.</p>
+                      <img src="/assets/hackthebox/thepayload/q3_com_interop.png" alt="Question 3 Image" className="rounded-lg border border-border w-full" />
+                    </div>
+
+                    {/* Question 4 */}
+                    <div className="space-y-4">
+                      <h4 className="text-lg font-semibold text-secondary">Question 4</h4>
+                      <p className="text-foreground/80">Which Opcode in the disassembly is responsible for calling the first function from the managed code?</p>
+                      <div className="bg-muted/50 rounded-lg p-4 border-l-4 border-primary">
+                        <p className="font-mono text-sm text-primary">ff 50 68</p>
+                      </div>
+                      <p className="text-foreground/70 text-sm">So this threw me off when looking at the ** ** ** answer key in HTB but eventually I figured out this was meant to be Hex Bytes. So I started in the main function as I figured if its anywhere it would probably be here as this is where the majority of executable code is. Our first clue to help find the answer is in the question itself, “calling”, so were looking for a specific CALL in the Main Function for managed code. If we recall from above Managed code is executed by the .NET CLR. Scrolling through and by some trial and error we get down to the location 140001d37 and right next to it we see a CALL for “IsClrLoaded”. Now we know where in the right area since CLR is being mentioned. I initially though the hex here was the answer but it was not, it actually at 140001d23. The reason behind this is the program is calling the function in the EAX register at offset 0x68, this actually contains the managed code it needs. To add more context to this you also see in the C Code listing it checks to see if CLR is loaded, we can infer a couple calls ago the managed code was being called. Since the CALL above “IsClrLoaded” a “wprintf”, it has to be the one above it.</p>
+                      <img src="/assets/hackthebox/thepayload/q4_opcode_call.png" alt="Question 4 Image" className="rounded-lg border border-border w-full" />
+                    </div>
+
+                    {/* Question 5 */}
+                    <div className="space-y-4">
+                      <h4 className="text-lg font-semibold text-secondary">Question 5</h4>
+                      <p className="text-foreground/80">Identify the multiplication and addition constants used by the binary's key generation algorithm for decryption.</p>
+                      <div className="bg-muted/50 rounded-lg p-4 border-l-4 border-primary">
+                        <p className="font-mono text-sm text-primary">7, 42h</p>
+                      </div>
+                      <p className="text-foreground/70 text-sm">So this was actually the very last question I answered, I figured out the answer way before I finish but the syntax the Author wanted was annoying to figure out but lets continue. Basically how I got here was I saw the print string for Decrypt Output and figured I was in the right area. From there the question mentions Multiplication and Addition, Looking in the ASM Listing Window we can see the Instructions for these (IMUL and ADD) with their values. Im still very annoyed about this but the explanation about the suffix “h” at the end means its Intel Assembly Notation.</p>
+                      <img src="/assets/hackthebox/thepayload/q5_constants.png" alt="Question 5 Image" className="rounded-lg border border-border w-full" />
+                    </div>
+
+                    {/* Question 6 */}
+                    <div className="space-y-4">
+                      <h4 className="text-lg font-semibold text-secondary">Question 6</h4>
+                      <p className="text-foreground/80">Which Opcode in the disassembly is responsible for calling the decryption logic from the managed code?</p>
+                      <div className="bg-muted/50 rounded-lg p-4 border-l-4 border-primary">
+                        <p className="font-mono text-sm text-primary">ff 50 58</p>
+                      </div>
+                      <p className="text-foreground/70 text-sm">So this one similar to the other question asking about the Opcode. Scrolling through the main function we find this little snippet of code. On the second screenshot just a little bit after the 1st screenshot we see “Decrypt Output %s/n”, this means were in the right area we just dont know where the answer is yet. Accompanying the string in the last sentence is a wprintf which means if the program has already printed this out then this means the logic of the decryption happened right before this and we see this in the 1st screenshot.</p>
+                      <p className="text-foreground/70 text-sm">Scrolling up we see our first clue, a base64 string. Following the logic of the Assembly we see it make a call convert the string, MOV something and JMP to the LAB. In the LAB going down we see it make attempt a JZ (Jump if Zero) and see that it issues an Error and stops but assuming going down line it does not equal zero the next CALL is should where we find the decryption logic.</p>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <img src="/assets/hackthebox/thepayload/q6_decryption_1.png" alt="Question 6 Image 1" className="rounded-lg border border-border w-full" />
+                        <img src="/assets/hackthebox/thepayload/q6_decryption_2.png" alt="Question 6 Image 2" className="rounded-lg border border-border w-full" />
+                      </div>
+                    </div>
+
+                    {/* Question 7 */}
+                    <div className="space-y-4">
+                      <h4 className="text-lg font-semibold text-secondary">Question 7</h4>
+                      <p className="text-foreground/80">Which Win32 API is being utilized by the binary to resolve the killswitch domain name?</p>
+                      <div className="bg-muted/50 rounded-lg p-4 border-l-4 border-primary">
+                        <p className="font-mono text-sm text-primary">getaddrinfo</p>
+                      </div>
+                      <p className="text-foreground/70 text-sm">This was pretty easy to find, right above the printf of the kill switch string we see 3 API calls, getaddrinfo, freeaddrinfo, and Ordinal_116. Only one of these makes sense since the question is about resolving the domain name</p>
+                      <img src="/assets/hackthebox/thepayload/q7_killswitch_api.png" alt="Question 7 Image" className="rounded-lg border border-border w-full" />
+                    </div>
+
+                    {/* Question 8 */}
+                    <div className="space-y-4">
+                      <h4 className="text-lg font-semibold text-secondary">Question 8</h4>
+                      <p className="text-foreground/80">Which network-related API does the binary use to gather details about each shared resource on a server?</p>
+                      <div className="bg-muted/50 rounded-lg p-4 border-l-4 border-primary">
+                        <p className="font-mono text-sm text-primary">NetShareEnum</p>
+                      </div>
+                      <p className="text-foreground/70 text-sm">Again pretty simple, I found this one a while ago just by looking at the different API’s being called. You can search in the Symbol Tree “Share” and you’ll see the answer.</p>
+                      <img src="/assets/hackthebox/thepayload/q8_netshareenum.png" alt="Question 8 Image" className="rounded-lg border border-border w-full" />
+                    </div>
+
+                    {/* Question 9 */}
+                    <div className="space-y-4">
+                      <h4 className="text-lg font-semibold text-secondary">Question 9</h4>
+                      <p className="text-foreground/80">Which Opcode is responsible for running the encrypted payload?</p>
+                      <div className="bg-muted/50 rounded-lg p-4 border-l-4 border-primary">
+                        <p className="font-mono text-sm text-primary">ff 50 60</p>
+                      </div>
+                      <p className="text-foreground/70 text-sm">So this one took a little bit of poking around the code for me to find. I used the Function Graph (Window → Function Graph) to get a overhead view of all the functions and where they lead to. To be honest though I was back tracking a lot and cannot remember specifically how to find where Im at BUT I can explain how to if I could again after finding the answer. So we know the malware likes to use Base64 strings, and before we see these base64 strings the API “ConvertStringtoBSTR” is called. Knowing this we can search for all instances of Base64 strings using this API. Now what tipped me off to me being in the right area is this huuuuge base64 blob. The previous strings were all super little compared to this so I knew this had to be our Payload. Looking at the screenshot below and following the logic we see the CALL to the API mentioned before, this is then MOV to a location in RAX. After that is JMP to the LAB. Following it some more it TEST to see if the values are 0, if they are it JZ (Jump if Zero) but again assuming it does not equal 0 to continue the function we get our next call. Looking at the CALL we see it points to the location in RAX where the Encoded payload is. This call is responsible for running the payload. The Opcode is highlighted below in yellow/green</p>
+                      <img src="/assets/hackthebox/thepayload/q9_payload_opcode.png" alt="Question 9 Image" className="rounded-lg border border-border w-full" />
+                    </div>
+
+                    {/* Question 10 */}
+                    <div className="space-y-4">
+                      <h4 className="text-lg font-semibold text-secondary">Question 10</h4>
+                      <p className="text-foreground/80">Identify the killswitch domain name the binary attempts to resolve.</p>
+                      <div className="bg-muted/50 rounded-lg p-4 border-l-4 border-primary">
+                        <p className="font-mono text-sm text-primary">k1v7-echosim.net</p>
+                      </div>
+                      <p className="text-foreground/70 text-sm">Now im not good with decrypting/decoding stuff but I did find how it was encoded and usually rely on AI to help with this part. So since earlier we found it was Multiplied by 7 (\a) and then added with 66 (B) giving these to AI it was able to decode it for us and we get out url it attempted to resolve</p>
+                      <img src="/assets/hackthebox/thepayload/q10_killswitch_domain.png" alt="Question 10 Image" className="rounded-lg border border-border w-full" />
+                    </div>
+
+                    <div className="space-y-4">
+                       <p className="text-foreground/70 text-sm">A little extra note at the end, I was curious what the encoded payload was we found earlier. It seems to be a powershell reverse shell</p>
+                       <img src="/assets/hackthebox/thepayload/extra_reverse_shell.png" alt="Powershell reverse shell" className="rounded-lg border border-border w-full" />
+                    </div>
+
+                    {/* Review Section */}
+                    <div className="mt-8 p-6 bg-primary/10 border border-primary/30 rounded-lg">
+                      <h4 className="text-xl font-bold text-primary mb-4">Review</h4>
+                      <p className="text-foreground/80 leading-relaxed">
+                        So this was really good Sherlock, I thought it was really well done and I learned a lot. Only thing I have negative about this was the Syntax of the Answers. I already made a gripe about the space being a “*” instead of a regular space and the question about the “h”. Other than that I did feel this was not necessarily too challenging but it kept me on my toes. Google was my best friend and as I've done more and more reversing Googling seems to be the key to be a good Reverse Engineer. Theres just too much to memorize but thats why im documenting these so I have a way to look back on go “Hey I remember that!”
+                      </p>
+                    </div>
+
+                    {/* What I Learned Section */}
+                    <div className="mt-6 p-6 bg-secondary/10 border border-secondary/30 rounded-lg">
+                      <h4 className="text-xl font-bold text-secondary mb-4">What I Learned</h4>
+                      <div className="space-y-4 text-foreground/80">
+                        <p className="leading-relaxed">
+                          I feel like I learned a good amount with this and several lessons I can take with me. One major thing was learning .NET was, I’ve always seen it but never really knew what its purpose was and doing this sherlock I kinda got a mini crash course in it. One thing that I feel like I can take with me is googling and breaking down question. This was not the first time but one of the harder boxes ive done that im proud of that I accomplished with minimal AI help (except at the end). I know a lot of REM Analyst rely on the Microsoft Documentation and not AI, this was a small win for me as I can clearly see my skill getting better especially in Code Analysis, the area I really want to focus on before taking GREM
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* Close Button */}
+                    <div className="mt-8 flex justify-center">
+                      <button
+                        onClick={() => {
+                          toggleWriteup('the-payload');
+                          const hardSection = document.querySelector('[data-section="hard"]');
+                          if (hardSection) {
+                            hardSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                          }
+                        }}
+                        className="px-6 py-3 bg-primary/20 hover:bg-primary/30 text-primary rounded-lg transition-colors font-semibold"
+                      >
+                        Close Write-up & Return to Top
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
           )}
         </div>
